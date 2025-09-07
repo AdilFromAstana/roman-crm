@@ -48,4 +48,5 @@ export type BringCar = {
   description: string;
   features: string[]; // список особенностей автомобиля
   imageUrl: string; // URL или путь к изображению
+  createdAt: string; // дата и время создания записи
 };
