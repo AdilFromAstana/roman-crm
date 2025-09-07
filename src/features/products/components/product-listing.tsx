@@ -1,8 +1,8 @@
-import { Product } from '@/constants/data';
-import { fakeProducts } from '@/constants/mock-api';
+import { fakeBringCars } from '@/constants/mock-api';
 import { searchParamsCache } from '@/lib/searchparams';
 import { ProductTable } from './product-tables';
-import { columns } from './product-tables/columns';
+import { bringCarColumns } from './product-tables/columns';
+import { BringCar } from '@/types';
 
 type ProductListingPage = {};
 
@@ -20,15 +20,15 @@ export default async function ProductListingPage({}: ProductListingPage) {
     ...(categories && { categories: categories })
   };
 
-  const data = await fakeProducts.getProducts(filters);
+  const data = await fakeBringCars.getProducts(filters);
   const totalProducts = data.total_products;
-  const products: Product[] = data.products;
+  const products: BringCar[] = data.products;
 
   return (
     <ProductTable
       data={products}
       totalItems={totalProducts}
-      columns={columns}
+      columns={bringCarColumns}
     />
   );
 }

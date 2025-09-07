@@ -33,3 +33,19 @@ export interface FooterItem {
 export type MainNavItem = NavItemWithOptionalChildren;
 
 export type SidebarNavItem = NavItemWithChildren;
+
+export type BringCar = {
+  id: string;
+  brand: string;
+  model: string;
+  year: number;
+  price: number; // в тенге (KZT)
+  mileage: number; // в километрах
+  color: string;
+  fuelType: 'petrol' | 'diesel' | 'electric' | 'hybrid';
+  transmission: 'manual' | 'automatic';
+  employeeId: string; // ID сотрудника, загнавшего авто
+  description: string;
+  features: string[]; // список особенностей автомобиля
+  imageUrl: string; // URL или путь к изображению
+};

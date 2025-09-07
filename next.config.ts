@@ -7,8 +7,7 @@ const baseConfig: NextConfig = {
     remotePatterns: [
       {
         protocol: 'https',
-        hostname: 'api.slingacademy.com',
-        port: ''
+        hostname: '**'
       }
     ]
   },
