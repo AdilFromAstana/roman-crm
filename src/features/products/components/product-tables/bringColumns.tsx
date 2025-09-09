@@ -3,138 +3,23 @@
 import { Badge } from '@/components/ui/badge';
 import { DataTableColumnHeader } from '@/components/ui/table/data-table-column-header';
 import { ColumnDef } from '@tanstack/react-table';
-import {
-  Calendar,
-  Car,
-  CheckCircle2,
-  Filter,
-  Text,
-  User,
-  XCircle
-} from 'lucide-react';
+import { Calendar, Car, Filter, Text, User } from 'lucide-react';
 import Image from 'next/image';
 import { CellAction } from './cell-action';
-import { CATEGORY_OPTIONS } from './options';
 import { BringCar } from '@/types';
 import { format } from 'date-fns'; // ✅ ИСПРАВЛЕНО: было 'path'
 import { ru } from 'date-fns/locale'; // ✅ Добавлено для локализации
-
-// =============================
-// КОНСТАНТЫ — СТАНДАРТИЗИРОВАНЫ ПОД { value, label }
-// =============================
-
-export const EMPLOYEES = [
-  { value: 'emp-1', label: 'Иван Петров', photo: '/images/emp1.jpg' },
-  { value: 'emp-2', label: 'Мария Сидорова', photo: '/images/emp2.jpg' },
-  { value: 'emp-3', label: 'Алексей Козлов', photo: '/images/emp3.jpg' },
-  { value: 'emp-4', label: 'Елена Смирнова', photo: '/images/emp4.jpg' }
-];
-
-export const BRANDS = [
-  { value: 'toyota', label: 'Toyota' },
-  { value: 'kia', label: 'Kia' },
-  { value: 'hyundai', label: 'Hyundai' },
-  { value: 'nissan', label: 'Nissan' },
-  { value: 'bmw', label: 'BMW' }
-];
-
-export const MODELS_BY_BRAND: Record<
-  string,
-  { value: string; label: string }[]
-> = {
-  toyota: [
-    { value: 'camry', label: 'Camry' },
-    { value: 'corolla', label: 'Corolla' },
-    { value: 'rav4', label: 'RAV4' },
-    { value: 'land_cruiser_prado', label: 'Land Cruiser Prado' },
-    { value: 'highlander', label: 'Highlander' }
-  ],
-  kia: [
-    { value: 'rio', label: 'Rio' },
-    { value: 'sportage', label: 'Sportage' },
-    { value: 'sorento', label: 'Sorento' },
-    { value: 'ceed', label: 'Ceed' },
-    { value: 'k5', label: 'K5' }
-  ],
-  hyundai: [
-    { value: 'solaris', label: 'Solaris' },
-    { value: 'tucson', label: 'Tucson' },
-    { value: 'creta', label: 'Creta' },
-    { value: 'elantra', label: 'Elantra' },
-    { value: 'santa_fe', label: 'Santa Fe' }
-  ],
-  nissan: [
-    { value: 'x-trail', label: 'X-Trail' },
-    { value: 'qashqai', label: 'Qashqai' },
-    { value: 'murano', label: 'Murano' },
-    { value: 'patrol', label: 'Patrol' },
-    { value: 'note', label: 'Note' }
-  ],
-  bmw: [
-    { value: 'x5', label: 'X5' },
-    { value: 'x3', label: 'X3' },
-    { value: '3-series', label: '3 Series' },
-    { value: '5-series', label: '5 Series' },
-    { value: 'i4', label: 'i4' }
-  ]
-};
-
-export const FUEL_TYPES = [
-  { value: 'petrol', label: 'Бензин' },
-  { value: 'diesel', label: 'Дизель' },
-  { value: 'electric', label: 'Электро' },
-  { value: 'hybrid', label: 'Гибрид' }
-];
-
-export const TRANSMISSIONS = [
-  { value: 'manual', label: 'Механика' },
-  { value: 'automatic', label: 'Автомат' }
-];
-
-// =============================
-// ХЕЛПЕРЫ
-// =============================
-
-const getEmployeeName = (id: string) =>
-  EMPLOYEES.find((emp) => emp.value === id)?.label || 'Неизвестен';
-
-const getEmployeePhoto = (id: string) =>
-  EMPLOYEES.find((emp) => emp.value === id)?.photo ||
-  '/images/default-avatar.png';
-
-const formatFuelType = (type: string) => {
-  const map: Record<string, string> = {
-    petrol: 'Бензин',
-    diesel: 'Дизель',
-    electric: 'Электро',
-    hybrid: 'Гибрид'
-  };
-  return map[type] || type;
-};
-
-const formatTransmission = (type: string) => {
-  const map: Record<string, string> = {
-    manual: 'Механика',
-    automatic: 'Автомат'
-  };
-  return map[type] || type;
-};
-
-const formatFeature = (featureId: string) => {
-  const featureMap: Record<string, string> = {
-    winter_tires: '❄️ Зимняя резина',
-    ceramic_coating: '🧪 Керамическое покрытие',
-    armor_film: '🛡️ Бронеплёнка',
-    floor_mats: '🧳 Коврики',
-    car_cover: '🧥 Чехол',
-    extended_warranty: '🔧 Расш. гарантия',
-    free_service: '🛢️ Бесплатное ТО',
-    navigation: '🗺️ Навигация + 360°',
-    premium_sound: '🔊 Премиум звук',
-    leather_seats: '🪑 Кожаные сиденья'
-  };
-  return featureMap[featureId] || featureId;
-};
+import {
+  BRANDS,
+  EMPLOYEES,
+  formatFeature,
+  formatFuelType,
+  formatTransmission,
+  FUEL_TYPES,
+  getEmployeeName,
+  getEmployeePhoto,
+  TRANSMISSIONS
+} from '@/constants/data';
 
 // =============================
 // КОЛОНКИ — ТОЛЬКО ДЛЯ BringCar

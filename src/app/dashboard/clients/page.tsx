@@ -3,7 +3,7 @@ import { buttonVariants } from '@/components/ui/button';
 import { Heading } from '@/components/ui/heading';
 import { Separator } from '@/components/ui/separator';
 import { DataTableSkeleton } from '@/components/ui/table/data-table-skeleton';
-import { fakeBringCars } from '@/constants/fakeBringCars';
+import { fakeClients } from '@/constants/fakeClients';
 import ProductListingPage from '@/features/products/components/product-listing';
 import { searchParamsCache, serialize } from '@/lib/searchparams';
 import { cn } from '@/lib/utils';
@@ -37,7 +37,10 @@ export default async function Page(props: pageProps) {
     ...(categories && { categories: categories })
   };
 
-  const data = await fakeBringCars.getProducts(filters);
+  const data = await fakeClients.getProducts(filters);
+
+  // This key is used for invoke suspense if any of the search params changed (used for filters).
+  // const key = serialize({ ...searchParams });
 
   return (
     <PageContainer scrollable={false}>

@@ -3,6 +3,7 @@ import { buttonVariants } from '@/components/ui/button';
 import { Heading } from '@/components/ui/heading';
 import { Separator } from '@/components/ui/separator';
 import { DataTableSkeleton } from '@/components/ui/table/data-table-skeleton';
+import { fakeSales } from '@/constants/fakeSales';
 import ProductListingPage from '@/features/products/components/product-listing';
 import { searchParamsCache, serialize } from '@/lib/searchparams';
 import { cn } from '@/lib/utils';
@@ -24,8 +25,19 @@ export default async function Page(props: pageProps) {
   // Allow nested RSCs to access the search params (in a type-safe way)
   searchParamsCache.parse(searchParams);
 
-  // This key is used for invoke suspense if any of the search params changed (used for filters).
-  // const key = serialize({ ...searchParams });
+  const page = searchParamsCache.get('page');
+  const search = searchParamsCache.get('name');
+  const pageLimit = searchParamsCache.get('perPage');
+  const categories = searchParamsCache.get('category');
+
+  const filters = {
+    page,
+    limit: pageLimit,
+    ...(search && { search }),
+    ...(categories && { categories: categories })
+  };
+
+  const data = await fakeSales.getProducts(filters);
 
   return (
     <PageContainer scrollable={false}>
@@ -49,7 +61,7 @@ export default async function Page(props: pageProps) {
             <DataTableSkeleton columnCount={5} rowCount={8} filterCount={2} />
           }
         >
-          <ProductListingPage />
+          <ProductListingPage data={data} />
         </Suspense>
       </div>
     </PageContainer>

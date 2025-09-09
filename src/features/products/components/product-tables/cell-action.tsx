@@ -8,13 +8,13 @@ import {
   DropdownMenuLabel,
   DropdownMenuTrigger
 } from '@/components/ui/dropdown-menu';
-import { BringCar } from '@/types';
+import { BringCar, Clients, Marketing, SoldCar, Target } from '@/types';
 import { IconEdit, IconDotsVertical, IconTrash } from '@tabler/icons-react';
 import { useRouter } from 'next/navigation';
 import { useState } from 'react';
 
 interface CellActionProps {
-  data: BringCar;
+  data: Clients | BringCar | SoldCar | Marketing | Target;
 }
 
 export const CellAction: React.FC<CellActionProps> = ({ data }) => {

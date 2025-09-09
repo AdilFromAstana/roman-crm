@@ -1,34 +1,26 @@
-import { fakeBringCars } from '@/constants/mock-api';
-import { searchParamsCache } from '@/lib/searchparams';
-import { ProductTable } from './product-tables';
-import { bringCarColumns } from './product-tables/columns';
-import { BringCar } from '@/types';
+// app/product-listing/page.tsx — Server Component (SSR)
+'use server'; // не нужно, если только чтение данных
 
-type ProductListingPage = {};
+import { ProductTableClient } from './product-table-client';
+import { getProductsByType, TableType } from '@/types';
 
-export default async function ProductListingPage({}: ProductListingPage) {
-  // Showcasing the use of search params cache in nested RSCs
-  const page = searchParamsCache.get('page');
-  const search = searchParamsCache.get('name');
-  const pageLimit = searchParamsCache.get('perPage');
-  const categories = searchParamsCache.get('category');
+// Асинхронный серверный компонент
+export default async function ProductListingPage({
+  searchParams
+}: {
+  searchParams: { [key: string]: string | string[] | undefined };
+}) {
+  // Получаем тип таблицы из URL, например: ?type=bringCar
+  const tableType = (searchParams.type as TableType) || 'clients';
 
-  const filters = {
-    page,
-    limit: pageLimit,
-    ...(search && { search }),
-    ...(categories && { categories: categories })
-  };
-
-  const data = await fakeBringCars.getProducts(filters);
-  const totalProducts = data.total_products;
-  const products: BringCar[] = data.products;
+  // Получаем данные на сервере (SSR)
+  const { total_products, products } = await getProductsByType(tableType);
 
   return (
-    <ProductTable
+    <ProductTableClient
+      tableType={tableType}
       data={products}
-      totalItems={totalProducts}
-      columns={bringCarColumns}
+      totalItems={total_products}
     />
   );
 }

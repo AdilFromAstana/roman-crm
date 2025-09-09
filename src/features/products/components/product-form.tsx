@@ -26,7 +26,7 @@ import {
   PopoverContent,
   PopoverTrigger
 } from '@/components/ui/popover';
-import { BringCar } from '@/types';
+import { Clients } from '@/types';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useForm, useWatch } from 'react-hook-form';
 import * as z from 'zod';
@@ -154,7 +154,7 @@ export default function CarForm({
   initialData,
   pageTitle
 }: {
-  initialData: BringCar | null;
+  initialData: Clients | null;
   pageTitle: string;
 }) {
   const [selectedBrand, setSelectedBrand] = useState<string>(
