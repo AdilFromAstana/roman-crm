@@ -51,7 +51,7 @@ export const soldCarColumns: ColumnDef<SoldCar>[] = [
     cell: ({ row }) => (
       <div className='relative mx-auto h-12 w-16'>
         <Image
-          src={row.original.imageUrl}
+          src={'https://cdn-icons-png.flaticon.com/512/6596/6596121.png'}
           alt={`${row.original.brand} ${row.original.model}`}
           fill
           className='rounded-md object-cover'
@@ -60,7 +60,10 @@ export const soldCarColumns: ColumnDef<SoldCar>[] = [
     ),
     enableSorting: false,
     enableColumnFilter: false,
-    size: 80
+    size: 80,
+    meta: {
+      label: 'Фото'
+    }
   },
   {
     accessorKey: 'brand',
@@ -410,7 +413,10 @@ export const soldCarColumns: ColumnDef<SoldCar>[] = [
     ),
     enableSorting: false,
     enableColumnFilter: false,
-    size: 200
+    size: 200,
+    meta: {
+      label: 'Опции'
+    }
   },
   {
     accessorKey: 'description',
@@ -422,13 +428,19 @@ export const soldCarColumns: ColumnDef<SoldCar>[] = [
     ),
     enableSorting: false,
     enableColumnFilter: false,
-    size: 250
+    size: 250,
+    meta: {
+      label: 'Описание'
+    }
   },
   {
     id: 'actions',
     cell: ({ row }) => <CellAction data={row.original} />,
     size: 60,
     enableSorting: false,
-    enableColumnFilter: false
+    enableColumnFilter: false,
+    meta: {
+      label: 'Действие'
+    }
   }
 ];

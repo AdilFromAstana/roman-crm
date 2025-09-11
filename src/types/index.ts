@@ -100,27 +100,24 @@ export type Target = {
   leadsCount: number;
 };
 
-export type TableType =
-  | 'clients'
-  | 'bringCar'
-  | 'soldCar'
-  | 'marketing'
-  | 'target';
+export type TableType = 'bringCar' | 'soldCar' | 'clients';
+// | 'marketing'
+// | 'target';
 
-export async function getProductsByType(type: TableType) {
-  // В реальном проекте — fetch из API или базы
-  switch (type) {
-    case 'clients':
-      return { total_products: clients.length, products: clients };
-    case 'bringCar':
-      return { total_products: bringCars.length, products: bringCars };
-    case 'soldCar':
-      return { total_products: soldCars.length, products: soldCars };
-    case 'marketing':
-      return { total_products: marketingData.length, products: marketingData };
-    case 'target':
-      return { total_products: targetData.length, products: targetData };
-    default:
-      return { total_products: 0, products: [] };
-  }
-}
+// export async function getProductsByType(type: TableType) {
+//   // В реальном проекте — fetch из API или базы
+//   switch (type) {
+//     case 'bringCar':
+//       return { total_products: bringCars.length, products: bringCars };
+//     case 'soldCar':
+//       return { total_products: soldCars.length, products: soldCars };
+//     // case 'clients':
+//     //   return { total_products: clients.length, products: clients };
+//     // case 'marketing':
+//     //   return { total_products: marketingData.length, products: marketingData };
+//     // case 'target':
+//     //   return { total_products: targetData.length, products: targetData };
+//     default:
+//       return { total_products: 0, products: [] };
+//   }
+// }

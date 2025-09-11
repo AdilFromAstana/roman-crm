@@ -3,27 +3,25 @@ import { buttonVariants } from '@/components/ui/button';
 import { Heading } from '@/components/ui/heading';
 import { Separator } from '@/components/ui/separator';
 import { DataTableSkeleton } from '@/components/ui/table/data-table-skeleton';
-import { fakeBringCars } from '@/constants/fakeBringCars';
-import ProductListingPage from '@/features/products/components/product-listing';
-import { searchParamsCache, serialize } from '@/lib/searchparams';
+import { UniversalTable } from '@/features/products/components/product-tables/UniversalTable';
+import { searchParamsCache } from '@/lib/searchparams';
 import { cn } from '@/lib/utils';
 import { IconPlus } from '@tabler/icons-react';
 import Link from 'next/link';
-import { SearchParams } from 'nuqs/server';
 import { Suspense } from 'react';
+import { TABLE_CONFIG } from '@/constants/table-config';
 
 export const metadata = {
-  title: 'Dashboard: Products'
+  title: 'Загон авто - Dashboard'
 };
 
-type pageProps = {
-  searchParams: Promise<SearchParams>;
-};
+interface PageProps {
+  searchParams: Promise<{ [key: string]: string | string[] | undefined }>;
+}
 
-export default async function Page(props: pageProps) {
-  const searchParams = await props.searchParams;
-  // Allow nested RSCs to access the search params (in a type-safe way)
-  searchParamsCache.parse(searchParams);
+export default async function BringCarPage({ searchParams }: PageProps) {
+  const searchParamsData = await searchParams;
+  searchParamsCache.parse(searchParamsData);
 
   const page = searchParamsCache.get('page');
   const search = searchParamsCache.get('name');
@@ -37,31 +35,34 @@ export default async function Page(props: pageProps) {
     ...(categories && { categories: categories })
   };
 
-  const data = await fakeBringCars.getProducts(filters);
+  const config = TABLE_CONFIG.bringCar;
+  const data = await config.dataSource.getProducts(filters);
 
   return (
     <PageContainer scrollable={false}>
       <div className='flex flex-1 flex-col space-y-4'>
         <div className='flex items-start justify-between'>
-          <Heading
-            title='Products'
-            description='Manage products (Server side table functionalities.)'
-          />
+          <Heading title={config.title} description={config.description} />
           <Link
-            href='/dashboard/product/new'
+            href={`/dashboard/bring-car/new`}
             className={cn(buttonVariants(), 'text-xs md:text-sm')}
           >
-            <IconPlus className='mr-2 h-4 w-4' /> Add New
+            <IconPlus className='mr-2 h-4 w-4' /> Добавить авто
           </Link>
         </div>
         <Separator />
         <Suspense
-          // key={key}
           fallback={
             <DataTableSkeleton columnCount={5} rowCount={8} filterCount={2} />
           }
         >
-          <ProductListingPage data={data} />
+          <UniversalTable
+            data={data.products}
+            totalItems={data.total_products}
+            columns={config.columns}
+            tableType='bringCar'
+            basePath='/dashboard/bring-car'
+          />
         </Suspense>
       </div>
     </PageContainer>

@@ -1,149 +1,188 @@
+// components/ui/table/data-table-toolbar.tsx
 'use client';
 
-import type { Column, Table } from '@tanstack/react-table';
-import * as React from 'react';
-
-import { DataTableDateFilter } from '@/components/ui/table/data-table-date-filter';
-import { DataTableFacetedFilter } from '@/components/ui/table/data-table-faceted-filter';
-import { DataTableSliderFilter } from '@/components/ui/table/data-table-slider-filter';
-import { DataTableViewOptions } from '@/components/ui/table/data-table-view-options';
+import { Cross2Icon } from '@radix-ui/react-icons';
+import { Table } from '@tanstack/react-table';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
-import { cn } from '@/lib/utils';
-import { Cross2Icon } from '@radix-ui/react-icons';
+import { ColumnVisibilityToggle } from './column-visibility-toggle';
+import React, { useState, useEffect, useRef } from 'react';
 
-interface DataTableToolbarProps<TData> extends React.ComponentProps<'div'> {
+interface DataTableToolbarProps<TData> {
   table: Table<TData>;
+  tableType?: string;
+  basePath?: string;
+  viewModal?: React.ComponentType<{ client: TData; trigger: React.ReactNode }>;
+  data?: TData[];
 }
+
+// Вспомогательные функции для форматирования чисел
+const formatNumberWithSpaces = (value: number | null | undefined): string => {
+  if (value === null || value === undefined) return '';
+  return value.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ' ');
+};
+
+const parseNumberFromSpaces = (value: string): number | null => {
+  if (!value) return null;
+  const cleanValue = value.replace(/\s/g, '');
+  const num = parseInt(cleanValue, 10);
+  return isNaN(num) ? null : num;
+};
 
 export function DataTableToolbar<TData>({
   table,
-  children,
-  className,
-  ...props
+  tableType,
+  basePath,
+  viewModal,
+  data = []
 }: DataTableToolbarProps<TData>) {
-  const isFiltered = table.getState().columnFilters.length > 0;
+  const [localBrandFilter, setLocalBrandFilter] = useState<string>('');
+  const [displayMinPrice, setDisplayMinPrice] = useState<string>('');
+  const [displayMaxPrice, setDisplayMaxPrice] = useState<string>('');
+  const [numericMinPrice, setNumericMinPrice] = useState<number | null>(null);
+  const [numericMaxPrice, setNumericMaxPrice] = useState<number | null>(null);
+  const minPriceDebounceRef = useRef<NodeJS.Timeout | null>(null);
+  const maxPriceDebounceRef = useRef<NodeJS.Timeout | null>(null);
 
-  const columns = React.useMemo(
-    () => table.getAllColumns().filter((column) => column.getCanFilter()),
-    [table]
+  const handleMinPriceChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const inputValue = e.target.value;
+    setDisplayMinPrice(inputValue);
+
+    if (minPriceDebounceRef.current) {
+      clearTimeout(minPriceDebounceRef.current);
+    }
+
+    minPriceDebounceRef.current = setTimeout(() => {
+      const parsedValue = parseNumberFromSpaces(inputValue);
+      setNumericMinPrice(parsedValue);
+    }, 1000);
+  };
+
+  const handleMaxPriceChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const inputValue = e.target.value;
+    setDisplayMaxPrice(inputValue);
+
+    if (maxPriceDebounceRef.current) {
+      clearTimeout(maxPriceDebounceRef.current);
+    }
+
+    maxPriceDebounceRef.current = setTimeout(() => {
+      const parsedValue = parseNumberFromSpaces(inputValue);
+      setNumericMaxPrice(parsedValue);
+    }, 1000);
+  };
+
+  useEffect(() => {
+    const brandColumn = table.getColumn('brand');
+    if (brandColumn) {
+      brandColumn.setFilterValue(localBrandFilter || undefined);
+    }
+  }, [localBrandFilter, table]);
+
+  useEffect(() => {
+    const priceColumn = table.getColumn('price');
+    if (priceColumn) {
+      const filterValue: { from?: number; to?: number } = {};
+      if (numericMinPrice !== null) {
+        filterValue.from = numericMinPrice;
+      }
+      if (numericMaxPrice !== null) {
+        filterValue.to = numericMaxPrice;
+      }
+      priceColumn.setFilterValue(
+        Object.keys(filterValue).length > 0 ? filterValue : undefined
+      );
+    }
+  }, [numericMinPrice, numericMaxPrice, table]);
+
+  const isFiltered = Boolean(
+    localBrandFilter ||
+      displayMinPrice ||
+      displayMaxPrice ||
+      (table.getState().columnFilters &&
+        table.getState().columnFilters.length > 0)
   );
 
-  const onReset = React.useCallback(() => {
+  const resetFilters = () => {
+    setLocalBrandFilter('');
+    setDisplayMinPrice('');
+    setDisplayMaxPrice('');
+    setNumericMinPrice(null);
+    setNumericMaxPrice(null);
+
+    if (minPriceDebounceRef.current) {
+      clearTimeout(minPriceDebounceRef.current);
+    }
+    if (maxPriceDebounceRef.current) {
+      clearTimeout(maxPriceDebounceRef.current);
+    }
+
     table.resetColumnFilters();
-  }, [table]);
+  };
+
+  useEffect(() => {
+    return () => {
+      if (minPriceDebounceRef.current) {
+        clearTimeout(minPriceDebounceRef.current);
+      }
+      if (maxPriceDebounceRef.current) {
+        clearTimeout(maxPriceDebounceRef.current);
+      }
+    };
+  }, []);
 
   return (
-    <div
-      role='toolbar'
-      aria-orientation='horizontal'
-      className={cn(
-        'flex w-full items-start justify-between gap-2 p-1',
-        className
+    <div className='space-y-4'>
+      <div className='flex items-center justify-between'>
+        <div className='flex flex-1 items-center space-x-2'>
+          <Input
+            placeholder='Поиск по марке...'
+            value={localBrandFilter}
+            onChange={(event) => setLocalBrandFilter(event.target.value)}
+            className='h-8 w-[150px] lg:w-[250px]'
+          />
+          {isFiltered && (
+            <Button
+              variant='ghost'
+              onClick={resetFilters}
+              className='h-8 px-2 lg:px-3'
+            >
+              Сбросить
+              <Cross2Icon className='ml-2 h-4 w-4' />
+            </Button>
+          )}
+        </div>
+        <div className='flex items-center space-x-2'>
+          <ColumnVisibilityToggle table={table} tableType={tableType} />
+        </div>
+      </div>
+
+      {(tableType === 'bringCar' || tableType === 'soldCar') && (
+        <div className='flex flex-wrap items-center gap-6'>
+          <div className='min-w-[250px] flex-1'>
+            <label className='text-sm'>Цена (₸)</label>
+            <div className='mt-2 flex items-center gap-2'>
+              <Input
+                type='text'
+                inputMode='numeric'
+                placeholder='От'
+                value={displayMinPrice}
+                onChange={handleMinPriceChange}
+                className='w-24'
+              />
+              <span className='text-muted-foreground'>-</span>
+              <Input
+                type='text'
+                inputMode='numeric'
+                placeholder='До'
+                value={displayMaxPrice}
+                onChange={handleMaxPriceChange}
+                className='w-24'
+              />
+            </div>
+          </div>
+        </div>
       )}
-      {...props}
-    >
-      <div className='flex flex-1 flex-wrap items-center gap-2'>
-        {columns.map((column) => (
-          <DataTableToolbarFilter key={column.id} column={column} />
-        ))}
-        {isFiltered && (
-          <Button
-            aria-label='Reset filters'
-            variant='outline'
-            size='sm'
-            className='border-dashed'
-            onClick={onReset}
-          >
-            <Cross2Icon />
-            Reset
-          </Button>
-        )}
-      </div>
-      <div className='flex items-center gap-2'>
-        {children}
-        <DataTableViewOptions table={table} />
-      </div>
     </div>
   );
-}
-interface DataTableToolbarFilterProps<TData> {
-  column: Column<TData>;
-}
-
-function DataTableToolbarFilter<TData>({
-  column
-}: DataTableToolbarFilterProps<TData>) {
-  {
-    const columnMeta = column.columnDef.meta;
-
-    const onFilterRender = React.useCallback(() => {
-      if (!columnMeta?.variant) return null;
-
-      switch (columnMeta.variant) {
-        case 'text':
-          return (
-            <Input
-              placeholder={columnMeta.placeholder ?? columnMeta.label}
-              value={(column.getFilterValue() as string) ?? ''}
-              onChange={(event) => column.setFilterValue(event.target.value)}
-              className='h-8 w-40 lg:w-56'
-            />
-          );
-
-        case 'number':
-          return (
-            <div className='relative'>
-              <Input
-                type='number'
-                inputMode='numeric'
-                placeholder={columnMeta.placeholder ?? columnMeta.label}
-                value={(column.getFilterValue() as string) ?? ''}
-                onChange={(event) => column.setFilterValue(event.target.value)}
-                className={cn('h-8 w-[120px]', columnMeta.unit && 'pr-8')}
-              />
-              {columnMeta.unit && (
-                <span className='bg-accent text-muted-foreground absolute top-0 right-0 bottom-0 flex items-center rounded-r-md px-2 text-sm'>
-                  {columnMeta.unit}
-                </span>
-              )}
-            </div>
-          );
-
-        case 'range':
-          return (
-            <DataTableSliderFilter
-              column={column}
-              title={columnMeta.label ?? column.id}
-            />
-          );
-
-        case 'date':
-        case 'dateRange':
-          return (
-            <DataTableDateFilter
-              column={column}
-              title={columnMeta.label ?? column.id}
-              multiple={columnMeta.variant === 'dateRange'}
-            />
-          );
-
-        case 'select':
-        case 'multiSelect':
-          return (
-            <DataTableFacetedFilter
-              column={column}
-              title={columnMeta.label ?? column.id}
-              options={columnMeta.options ?? []}
-              multiple={columnMeta.variant === 'multiSelect'}
-            />
-          );
-
-        default:
-          return null;
-      }
-    }, [column, columnMeta]);
-
-    return onFilterRender();
-  }
 }

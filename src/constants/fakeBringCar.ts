@@ -2,7 +2,7 @@ import { BringCar } from '@/types';
 import { matchSorter } from 'match-sorter';
 import { delay } from './mock-api';
 
-export const fakeBringCars = {
+export const fakeBringCar = {
   records: [] as BringCar[], // Holds the list of product objects
 
   // Initialize with sample data
@@ -762,4 +762,4 @@ export const fakeBringCars = {
     };
   }
 };
-fakeBringCars.initialize();
+fakeBringCar.initialize();

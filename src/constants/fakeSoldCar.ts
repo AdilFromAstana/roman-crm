@@ -2,7 +2,7 @@ import { matchSorter } from 'match-sorter';
 import { delay } from './mock-api';
 import { SoldCar } from '@/types';
 
-export const fakeSales = {
+export const fakeSoldCar = {
   records: [] as SoldCar[], // Holds the list of product objects
 
   // Initialize with sample data
@@ -20,9 +20,9 @@ export const fakeSales = {
         color: 'Серебристый',
         fuelType: 'petrol',
         transmission: 'automatic',
-        bringEmployeeId: 'emp-003',
-        saleEmployeeId: 'emp-007',
-        marketgingEmployeeId: 'emp-012',
+        bringEmployeeId: 'emp-3',
+        saleEmployeeId: 'emp-2',
+        marketgingEmployeeId: 'emp-1',
         description:
           'Продано Айдару Т. — в отличном состоянии, один хозяин, полный сервис.',
         features: [
@@ -47,9 +47,9 @@ export const fakeSales = {
         color: 'Белый',
         fuelType: 'petrol',
         transmission: 'automatic',
-        bringEmployeeId: 'emp-005',
-        saleEmployeeId: 'emp-009',
-        marketgingEmployeeId: 'emp-014',
+        bringEmployeeId: 'emp-2',
+        saleEmployeeId: 'emp-1',
+        marketgingEmployeeId: 'emp-4',
         description:
           'Продано Гульнаре А. — идеальное состояние, женская эксплуатация.',
         features: [
@@ -74,9 +74,9 @@ export const fakeSales = {
         color: 'Чёрный',
         fuelType: 'petrol',
         transmission: 'manual',
-        bringEmployeeId: 'emp-002',
-        saleEmployeeId: 'emp-008',
-        marketgingEmployeeId: 'emp-011',
+        bringEmployeeId: 'emp-2',
+        saleEmployeeId: 'emp-3',
+        marketgingEmployeeId: 'emp-1',
         description:
           'Продано Ерлану С. — спортивная комплектация, механика, бензин.',
         features: [
@@ -101,9 +101,9 @@ export const fakeSales = {
         color: 'Серый',
         fuelType: 'diesel',
         transmission: 'automatic',
-        bringEmployeeId: 'emp-006',
-        saleEmployeeId: 'emp-010',
-        marketgingEmployeeId: 'emp-015',
+        bringEmployeeId: 'emp-3',
+        saleEmployeeId: 'emp-1',
+        marketgingEmployeeId: 'emp-4',
         description:
           'Продано Айгерим Ж. — 7 мест, полный привод, идеально для семьи.',
         features: [
@@ -129,9 +129,9 @@ export const fakeSales = {
         color: 'Белый',
         fuelType: 'petrol',
         transmission: 'automatic',
-        bringEmployeeId: 'emp-001',
-        saleEmployeeId: 'emp-006',
-        marketgingEmployeeId: 'emp-013',
+        bringEmployeeId: 'emp-1',
+        saleEmployeeId: 'emp-2',
+        marketgingEmployeeId: 'emp-4',
         description: 'Продано Данияру Н. — экономичный, надежный, для города.',
         features: [
           'Кондиционер',
@@ -155,9 +155,9 @@ export const fakeSales = {
         color: 'Синий',
         fuelType: 'electric',
         transmission: 'automatic',
-        bringEmployeeId: 'emp-004',
-        saleEmployeeId: 'emp-011',
-        marketgingEmployeeId: 'emp-016',
+        bringEmployeeId: 'emp-4',
+        saleEmployeeId: 'emp-1',
+        marketgingEmployeeId: 'emp-4',
         description:
           'Продано Жанне О. — электромобиль, почти новый, зарядка до 80% за 30 мин.',
         features: [
@@ -182,9 +182,9 @@ export const fakeSales = {
         color: 'Коричневый',
         fuelType: 'petrol',
         transmission: 'automatic',
-        bringEmployeeId: 'emp-007',
-        saleEmployeeId: 'emp-005',
-        marketgingEmployeeId: 'emp-010',
+        bringEmployeeId: 'emp-2',
+        saleEmployeeId: 'emp-3',
+        marketgingEmployeeId: 'emp-1',
         description:
           'Продано Руслану Б. — полный привод, внедорожные шины в комплекте.',
         features: [
@@ -210,9 +210,9 @@ export const fakeSales = {
         color: 'Белый',
         fuelType: 'petrol',
         transmission: 'automatic',
-        bringEmployeeId: 'emp-008',
-        saleEmployeeId: 'emp-004',
-        marketgingEmployeeId: 'emp-009',
+        bringEmployeeId: 'emp-1',
+        saleEmployeeId: 'emp-4',
+        marketgingEmployeeId: 'emp-2',
         description:
           'Продано Асель Т. — женская эксплуатация, без ДТП, вложений не требует.',
         features: [
@@ -238,9 +238,9 @@ export const fakeSales = {
         color: 'Чёрный',
         fuelType: 'diesel',
         transmission: 'automatic',
-        bringEmployeeId: 'emp-009',
-        saleEmployeeId: 'emp-012',
-        marketgingEmployeeId: 'emp-017',
+        bringEmployeeId: 'emp-3',
+        saleEmployeeId: 'emp-2',
+        marketgingEmployeeId: 'emp-1',
         description:
           'Продано Марату К. — для охоты и бездорожья, усиленная подвеска.',
         features: [
@@ -266,9 +266,9 @@ export const fakeSales = {
         color: 'Красный',
         fuelType: 'petrol',
         transmission: 'manual',
-        bringEmployeeId: 'emp-010',
-        saleEmployeeId: 'emp-003',
-        marketgingEmployeeId: 'emp-008',
+        bringEmployeeId: 'emp-4',
+        saleEmployeeId: 'emp-3',
+        marketgingEmployeeId: 'emp-1',
         description:
           'Продано Ляззат М. — идеален для студентов и города, расход 5л/100км.',
         features: [
@@ -294,9 +294,9 @@ export const fakeSales = {
         color: 'Зелёный',
         fuelType: 'diesel',
         transmission: 'manual',
-        bringEmployeeId: 'emp-011',
-        saleEmployeeId: 'emp-002',
-        marketgingEmployeeId: 'emp-007',
+        bringEmployeeId: 'emp-1',
+        saleEmployeeId: 'emp-2',
+        marketgingEmployeeId: 'emp-2',
         description:
           'Продано Тимуру Ж. — для строительства и перевозок, усиленная рама.',
         features: ['Дизель 3.0', 'Механика', 'Грузоподъёмность 1 т', 'Лебёдка'],
@@ -316,9 +316,9 @@ export const fakeSales = {
         color: 'Серый',
         fuelType: 'petrol',
         transmission: 'automatic',
-        bringEmployeeId: 'emp-012',
-        saleEmployeeId: 'emp-001',
-        marketgingEmployeeId: 'emp-006',
+        bringEmployeeId: 'emp-2',
+        saleEmployeeId: 'emp-1',
+        marketgingEmployeeId: 'emp-3',
         description:
           'Продано Сауле А. — для такси, установлен таксометр, кондиционер.',
         features: [
@@ -344,9 +344,9 @@ export const fakeSales = {
         color: 'Чёрный',
         fuelType: 'diesel',
         transmission: 'automatic',
-        bringEmployeeId: 'emp-013',
-        saleEmployeeId: 'emp-005',
-        marketgingEmployeeId: 'emp-011',
+        bringEmployeeId: 'emp-3',
+        saleEmployeeId: 'emp-2',
+        marketgingEmployeeId: 'emp-1',
         description:
           'Продано Нурлану А. — кожаный салон, дизель, бизнес-класс.',
         features: [
@@ -372,9 +372,9 @@ export const fakeSales = {
         color: 'Белый',
         fuelType: 'petrol',
         transmission: 'automatic',
-        bringEmployeeId: 'emp-014',
-        saleEmployeeId: 'emp-006',
-        marketgingEmployeeId: 'emp-012',
+        bringEmployeeId: 'emp-4',
+        saleEmployeeId: 'emp-3',
+        marketgingEmployeeId: 'emp-2',
         description:
           'Продано Айнуру Б. — как новая, один владелец, сервисная книга.',
         features: [
@@ -399,9 +399,9 @@ export const fakeSales = {
         color: 'Оранжевый',
         fuelType: 'petrol',
         transmission: 'manual',
-        bringEmployeeId: 'emp-015',
-        saleEmployeeId: 'emp-004',
-        marketgingEmployeeId: 'emp-009',
+        bringEmployeeId: 'emp-1',
+        saleEmployeeId: 'emp-4',
+        marketgingEmployeeId: 'emp-4',
         description:
           'Продано Еркебулану С. — для охоты и рыбалки, внедорожник, механика.',
         features: ['Механика', 'Полный привод', 'Защита картера', 'Лебёдка'],
@@ -421,9 +421,9 @@ export const fakeSales = {
         color: 'Красный',
         fuelType: 'petrol',
         transmission: 'automatic',
-        bringEmployeeId: 'emp-001',
-        saleEmployeeId: 'emp-008',
-        marketgingEmployeeId: 'emp-014',
+        bringEmployeeId: 'emp-1',
+        saleEmployeeId: 'emp-1',
+        marketgingEmployeeId: 'emp-4',
         description:
           'Продано Динаре К. — купе, кожа, спорт-режим, выглядит как новая.',
         features: ['Купе', 'Кожа', 'Спорт-режим', 'LED', 'Панорамная крыша'],
@@ -443,9 +443,9 @@ export const fakeSales = {
         color: 'Белый',
         fuelType: 'diesel',
         transmission: 'automatic',
-        bringEmployeeId: 'emp-003',
-        saleEmployeeId: 'emp-007',
-        marketgingEmployeeId: 'emp-013',
+        bringEmployeeId: 'emp-3',
+        saleEmployeeId: 'emp-2',
+        marketgingEmployeeId: 'emp-3',
         description:
           'Продано Азамату Р. — для семьи из 8 человек, 3 ряда сидений.',
         features: [
@@ -471,9 +471,9 @@ export const fakeSales = {
         color: 'Синий',
         fuelType: 'petrol',
         transmission: 'manual',
-        bringEmployeeId: 'emp-005',
-        saleEmployeeId: 'emp-002',
-        marketgingEmployeeId: 'emp-010',
+        bringEmployeeId: 'emp-2',
+        saleEmployeeId: 'emp-2',
+        marketgingEmployeeId: 'emp-4',
         description:
           'Продано Жадыре Т. — экономичный, надежный, для начинающих водителей.',
         features: [
@@ -498,9 +498,9 @@ export const fakeSales = {
         color: 'Чёрный',
         fuelType: 'petrol',
         transmission: 'automatic',
-        bringEmployeeId: 'emp-007',
-        saleEmployeeId: 'emp-011',
-        marketgingEmployeeId: 'emp-016',
+        bringEmployeeId: 'emp-2',
+        saleEmployeeId: 'emp-1',
+        marketgingEmployeeId: 'emp-4',
         description:
           'Продано Бауыржану О. — полный привод, кожа, люк, премиум-класс.',
         features: [
@@ -526,9 +526,9 @@ export const fakeSales = {
         color: 'Серебристый',
         fuelType: 'petrol',
         transmission: 'automatic',
-        bringEmployeeId: 'emp-009',
-        saleEmployeeId: 'emp-006',
-        marketgingEmployeeId: 'emp-015',
+        bringEmployeeId: 'emp-4',
+        saleEmployeeId: 'emp-3',
+        marketgingEmployeeId: 'emp-1',
         description:
           'Продано Айгуль С. — с гарантией, сервисная история, как новая.',
         features: [
@@ -637,4 +637,4 @@ export const fakeSales = {
   }
 };
 
-fakeSales.initialize();
+fakeSoldCar.initialize();

@@ -62,6 +62,7 @@ interface UseDataTableProps<TData>
   scroll?: boolean;
   shallow?: boolean;
   startTransition?: React.TransitionStartFunction;
+  tableType?: string; // Добавляем tableType для сохранения настроек
 }
 
 export function useDataTable<TData>(props: UseDataTableProps<TData>) {
@@ -77,6 +78,7 @@ export function useDataTable<TData>(props: UseDataTableProps<TData>) {
     scroll = false,
     shallow = true,
     startTransition,
+    tableType, // Извлекаем tableType
     ...tableProps
   } = props;
 
@@ -103,11 +105,37 @@ export function useDataTable<TData>(props: UseDataTableProps<TData>) {
     ]
   );
 
+  // Инициализируем видимость колонок с учетом сохраненных настроек
+  const getInitialColumnVisibility = (): VisibilityState => {
+    if (tableType) {
+      const saved = localStorage.getItem(`column-visibility-${tableType}`);
+      if (saved) {
+        try {
+          return JSON.parse(saved);
+        } catch (e) {
+          console.error('Error parsing saved column visibility', e);
+        }
+      }
+    }
+    return initialState?.columnVisibility ?? {};
+  };
+
   const [rowSelection, setRowSelection] = React.useState<RowSelectionState>(
     initialState?.rowSelection ?? {}
   );
+
   const [columnVisibility, setColumnVisibility] =
-    React.useState<VisibilityState>(initialState?.columnVisibility ?? {});
+    React.useState<VisibilityState>(getInitialColumnVisibility());
+
+  // Сохраняем видимость колонок при изменении
+  React.useEffect(() => {
+    if (tableType) {
+      localStorage.setItem(
+        `column-visibility-${tableType}`,
+        JSON.stringify(columnVisibility)
+      );
+    }
+  }, [columnVisibility, tableType]);
 
   const [page, setPage] = useQueryState(
     PAGE_KEY,
@@ -266,7 +294,7 @@ export function useDataTable<TData>(props: UseDataTableProps<TData>) {
     state: {
       pagination,
       sorting,
-      columnVisibility,
+      columnVisibility, // Используем состояние с учетом сохраненных настроек
       rowSelection,
       columnFilters
     },
@@ -279,7 +307,7 @@ export function useDataTable<TData>(props: UseDataTableProps<TData>) {
     onPaginationChange,
     onSortingChange,
     onColumnFiltersChange,
-    onColumnVisibilityChange: setColumnVisibility,
+    onColumnVisibilityChange: setColumnVisibility, // Обновляем состояние при изменении
     getCoreRowModel: getCoreRowModel(),
     getFilteredRowModel: getFilteredRowModel(),
     getPaginationRowModel: getPaginationRowModel(),

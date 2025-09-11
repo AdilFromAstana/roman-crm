@@ -21,10 +21,6 @@ import {
   TRANSMISSIONS
 } from '@/constants/data';
 
-// =============================
-// КОЛОНКИ — ТОЛЬКО ДЛЯ BringCar
-// =============================
-
 export const bringCarColumns: ColumnDef<BringCar>[] = [
   {
     accessorKey: 'imageUrl',
@@ -32,7 +28,10 @@ export const bringCarColumns: ColumnDef<BringCar>[] = [
     cell: ({ row }) => (
       <div className='relative mx-auto h-12 w-16'>
         <Image
-          src={row.original.imageUrl}
+          src={
+            row.original.imageUrl ||
+            'https://cdn-icons-png.flaticon.com/512/6596/6596121.png'
+          }
           alt={`${row.original.brand} ${row.original.model}`}
           fill
           className='rounded-md object-cover'
@@ -52,7 +51,7 @@ export const bringCarColumns: ColumnDef<BringCar>[] = [
     meta: {
       label: 'Марка',
       variant: 'multiSelect',
-      options: BRANDS, // ✅ Теперь { value, label }
+      options: BRANDS,
       icon: Car
     },
     filterFn: (row, id, value: string[]) => {
@@ -82,8 +81,10 @@ export const bringCarColumns: ColumnDef<BringCar>[] = [
     ),
     cell: ({ row }) => <div>{row.original.year}</div>,
     meta: {
-      label: 'Дата добавления',
-      variant: 'dateRange',
+      label: 'Год выпуска',
+      variant: 'range',
+      range: [2000, new Date().getFullYear()],
+      step: 1,
       icon: Calendar
     },
     filterFn: (row, id, filterValue: { from?: number; to?: number }) => {
@@ -112,10 +113,11 @@ export const bringCarColumns: ColumnDef<BringCar>[] = [
       unit: '₸',
       icon: Text
     },
-    filterFn: (row, id, filterValue: { from?: number; to?: number }) => {
-      const price = row.getValue<number>(id);
-      if (filterValue.from && price < filterValue.from) return false;
-      if (filterValue.to && price > filterValue.to) return false;
+    filterFn: (row, columnId, filterValue: { from?: number; to?: number }) => {
+      const price = row.getValue<number>(columnId);
+      if (filterValue.from !== undefined && price < filterValue.from)
+        return false;
+      if (filterValue.to !== undefined && price > filterValue.to) return false;
       return true;
     },
     size: 140
@@ -144,6 +146,35 @@ export const bringCarColumns: ColumnDef<BringCar>[] = [
     size: 140
   },
   {
+    accessorKey: 'color',
+    header: ({ column }) => (
+      <DataTableColumnHeader column={column} title='Цвет' />
+    ),
+    cell: ({ row }) => <Badge variant='secondary'>{row.original.color}</Badge>,
+    meta: {
+      label: 'Цвет',
+      variant: 'multiSelect',
+      options: [
+        { value: 'Белый', label: 'Белый' },
+        { value: 'Чёрный', label: 'Чёрный' },
+        { value: 'Серый', label: 'Серый' },
+        { value: 'Серебристый', label: 'Серебристый' },
+        { value: 'Красный', label: 'Красный' },
+        { value: 'Синий', label: 'Синий' },
+        { value: 'Зелёный', label: 'Зелёный' },
+        { value: 'Жёлтый', label: 'Жёлтый' },
+        { value: 'Оранжевый', label: 'Оранжевый' },
+        { value: 'Коричневый', label: 'Коричневый' },
+        { value: 'Бежевый', label: 'Бежевый' }
+      ],
+      icon: Filter
+    },
+    filterFn: (row, id, value: string[]) => {
+      return value.includes(row.getValue(id));
+    },
+    size: 100
+  },
+  {
     accessorKey: 'fuelType',
     header: ({ column }) => (
       <DataTableColumnHeader column={column} title='Топливо' />
@@ -154,7 +185,7 @@ export const bringCarColumns: ColumnDef<BringCar>[] = [
     meta: {
       label: 'Тип топлива',
       variant: 'multiSelect',
-      options: FUEL_TYPES, // ✅ { value, label }
+      options: FUEL_TYPES,
       icon: Filter
     },
     filterFn: (row, id, value: string[]) => {
@@ -175,7 +206,7 @@ export const bringCarColumns: ColumnDef<BringCar>[] = [
     meta: {
       label: 'Коробка передач',
       variant: 'multiSelect',
-      options: TRANSMISSIONS, // ✅ { value, label }
+      options: TRANSMISSIONS,
       icon: Filter
     },
     filterFn: (row, id, value: string[]) => {
@@ -205,7 +236,7 @@ export const bringCarColumns: ColumnDef<BringCar>[] = [
     meta: {
       label: 'Сотрудник',
       variant: 'multiSelect',
-      options: EMPLOYEES, // ✅ { value, label, photo } — photo игнорируется фильтром, но тип допускает
+      options: EMPLOYEES,
       icon: User
     },
     filterFn: (row, id, value: string[]) => {
@@ -221,7 +252,7 @@ export const bringCarColumns: ColumnDef<BringCar>[] = [
     cell: ({ row }) => (
       <div className='text-muted-foreground text-sm'>
         {format(new Date(row.original.createdAt), 'dd MMM yyyy HH:mm', {
-          locale: ru // ✅ Используем русскую локаль
+          locale: ru
         })}
       </div>
     ),
@@ -240,7 +271,9 @@ export const bringCarColumns: ColumnDef<BringCar>[] = [
   },
   {
     accessorKey: 'features',
-    header: 'Опции',
+    header: ({ column }) => (
+      <DataTableColumnHeader column={column} title='Опции' />
+    ),
     cell: ({ row }) => (
       <div className='flex flex-wrap gap-1'>
         {row.original.features.length > 0 ? (
@@ -259,15 +292,29 @@ export const bringCarColumns: ColumnDef<BringCar>[] = [
         )}
       </div>
     ),
+    meta: {
+      label: 'Опции',
+      variant: 'multiSelect',
+      options: [
+        { value: 'Камера 360°', label: '360° камера' },
+        { value: 'Адаптивный круиз-контроль', label: 'Адаптивный круиз' },
+        { value: 'Премиум аудиосистема', label: 'Премиум аудио' },
+        { value: 'Кожаный салон', label: 'Кожа' },
+        { value: 'Подогрев сидений', label: 'Подогрев' },
+        { value: 'Парктроник', label: 'Парктроник' },
+        { value: 'Круиз-контроль', label: 'Круиз' },
+        { value: 'Люк', label: 'Люк' },
+        { value: 'Электропривод сидений', label: 'Электросиденья' },
+        { value: 'Мультируль', label: 'Мультируль' },
+        { value: 'Навигация', label: 'Навигация' }
+      ],
+      icon: Filter
+    },
+    filterFn: (row, id, value: string[]) => {
+      const features = row.getValue<string[]>(id);
+      return value.some((v) => features.includes(v));
+    },
     enableSorting: false,
-    enableColumnFilter: false,
     size: 200
-  },
-  {
-    id: 'actions',
-    cell: ({ row }) => <CellAction data={row.original} />,
-    size: 60,
-    enableSorting: false,
-    enableColumnFilter: false
   }
 ];

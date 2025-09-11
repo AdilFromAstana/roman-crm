@@ -1,46 +1,47 @@
 import { NavItem } from '@/types';
 
-//Info: The following data is used for the sidebar navigation and Cmd K bar.
 export const navItems: NavItem[] = [
   {
     title: 'Главная',
     url: '/dashboard/overview',
     icon: 'dashboard',
-    isActive: false,
     shortcut: ['d', 'd'],
-    items: [] // Empty array as there are no child items for Dashboard
+    items: []
   },
   {
     title: 'Загон',
-    url: '/dashboard/bring',
+    url: '/dashboard/bring-car', // ✅ Теперь правильно
     icon: 'product',
     shortcut: ['p', 'p'],
-    isActive: false,
-    items: [] // No child items
+    items: []
+  },
+  {
+    title: 'Продажи',
+    url: '/dashboard/sale-car', // ✅ Теперь правильно
+    icon: 'product',
+    shortcut: ['p', 'p'],
+    items: []
   },
   {
     title: 'Таргет',
     url: '/dashboard/target',
     icon: 'kanban',
     shortcut: ['k', 'k'],
-    isActive: false,
-    items: [] // No child items
+    items: []
   },
   {
     title: 'Клиенты',
     url: '/dashboard/clients',
     icon: 'kanban',
     shortcut: ['k', 'k'],
-    isActive: false,
-    items: [] // No child items
+    items: []
   },
   {
     title: 'Маркетинг',
     url: '/dashboard/marketing',
     icon: 'kanban',
     shortcut: ['k', 'k'],
-    isActive: false,
-    items: [] // No child items
+    items: []
   },
   {
     title: 'Профиль',
@@ -185,12 +186,23 @@ export const TRANSMISSIONS = [
   { value: 'automatic', label: 'Автомат' }
 ];
 
+export const FEATURES = [
+  'Кондиционер',
+  'Подогрев сидений',
+  'Парктроник',
+  'Камера заднего вида',
+  'Круиз-контроль',
+  'Люк',
+  'Электропривод сидений',
+  'Мультируль',
+  'Навигация'
+];
+
 export const getEmployeeName = (id: string) =>
   EMPLOYEES.find((emp) => emp.value === id)?.label || 'Неизвестен';
 
 export const getEmployeePhoto = (id: string) =>
-  EMPLOYEES.find((emp) => emp.value === id)?.photo ||
-  '/images/default-avatar.png';
+  'https://cdn-icons-png.flaticon.com/512/6596/6596121.png';
 
 export const formatFuelType = (type: string) => {
   const map: Record<string, string> = {
