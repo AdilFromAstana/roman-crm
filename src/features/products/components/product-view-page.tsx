@@ -1,4 +1,3 @@
-import { fakeBringCars } from '@/constants/mock-api';
 import { notFound } from 'next/navigation';
 import ProductForm from './product-form';
 import { Clients } from '@/types';
@@ -14,8 +13,6 @@ export default async function ProductViewPage({
   let pageTitle = 'Create New Product';
 
   if (productId !== 'new') {
-    const data = await fakeBringCars.getProductById(productId);
-    product = data.product as Clients;
     if (!product) {
       notFound();
     }
