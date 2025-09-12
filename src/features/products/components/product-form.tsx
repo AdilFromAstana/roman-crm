@@ -157,23 +157,21 @@ export default function CarForm({
   initialData: Clients | null;
   pageTitle: string;
 }) {
-  const [selectedBrand, setSelectedBrand] = useState<string>(
-    initialData?.brand || ''
-  );
+  const [selectedBrand, setSelectedBrand] = useState<string>('');
 
-  const defaultValues: CarFormValues = {
-    image: null,
-    brand: initialData?.brand || '',
-    model: initialData?.model || '',
-    year: initialData?.year || new Date().getFullYear(),
-    price: initialData?.price || 0,
-    mileage: initialData?.mileage || 0,
-    color: initialData?.color || '',
-    fuelType: initialData?.fuelType || 'petrol',
-    transmission: initialData?.transmission || 'automatic',
-    employeeId: initialData?.employeeId || '',
-    features: initialData?.features || [],
-    description: initialData?.description || ''
+  const defaultValues = {
+    // image: null,
+    // brand: initialData?.brand || '',
+    // model: initialData?.model || '',
+    // year: initialData?.year || new Date().getFullYear(),
+    // price: initialData?.price || 0,
+    // mileage: initialData?.mileage || 0,
+    // color: initialData?.color || '',
+    // fuelType: initialData?.fuelType || 'petrol',
+    // transmission: initialData?.transmission || 'automatic',
+    // employeeId: initialData?.employeeId || '',
+    // features: initialData?.features || [],
+    // description: initialData?.description || ''
   };
 
   const form = useForm<CarFormValues>({
