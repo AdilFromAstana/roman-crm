@@ -49,9 +49,12 @@ export const soldCarColumns: ColumnDef<SoldCar>[] = [
     accessorKey: 'imageUrl',
     header: () => <div className='text-center'>Фото</div>,
     cell: ({ row }) => (
-      <div className='relative mx-auto h-12 w-16'>
+      <div className='relative mx-auto h-64 w-96'>
         <Image
-          src={'https://cdn-icons-png.flaticon.com/512/6596/6596121.png'}
+          src={
+            row.original.imageUrl ||
+            'https://cdn-icons-png.flaticon.com/512/6596/6596121.png'
+          }
           alt={`${row.original.brand} ${row.original.model}`}
           fill
           className='rounded-md object-cover'

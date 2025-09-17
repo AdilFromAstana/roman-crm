@@ -31,7 +31,8 @@ export const fakeSoldCar = {
           'Камера заднего вида',
           'Подогрев сидений'
         ],
-        imageUrl: 'https://via.placeholder.com/300x200?text=Toyota+Camry+2020',
+        imageUrl:
+          'https://cs.copart.com/v1/AUTH_svc.pdoc00001/ids-c-prod-lpp/0725/a7dce87fb39d4f378c9f3f4aa091a6cc_hrs.jpg',
         createdAt: '2024-06-01T11:00:00Z',
         soldAt: '2024-06-05T16:30:00Z'
       },
@@ -58,7 +59,7 @@ export const fakeSoldCar = {
           'Датчики парковки',
           'Электропривод сидений'
         ],
-        imageUrl: 'https://via.placeholder.com/300x200?text=Hyundai+Creta+2021',
+        imageUrl: 'https://rdm-import.ru/image/product/39991/1.JPG',
         createdAt: '2024-06-02T15:00:00Z',
         soldAt: '2024-06-07T18:10:00Z'
       },
@@ -85,7 +86,8 @@ export const fakeSoldCar = {
           'Пуск с кнопки',
           'LED фары'
         ],
-        imageUrl: 'https://via.placeholder.com/300x200?text=BMW+3+Series+2017',
+        imageUrl:
+          'https://cdn0.riastatic.com/photosnew/auto/photo/bmw_3-series__492831150f.jpg',
         createdAt: '2024-06-03T10:30:00Z',
         soldAt: '2024-06-08T14:20:00Z'
       },
@@ -113,7 +115,7 @@ export const fakeSoldCar = {
           'Подогрев руля'
         ],
         imageUrl:
-          'https://via.placeholder.com/300x200?text=Mitsubishi+Pajero+Sport',
+          'https://avatars.mds.yandex.net/get-autoru-vos/5233478/c812a7ee440804126ad3b316cdef72ff/456x342',
         createdAt: '2024-06-04T17:00:00Z',
         soldAt: '2024-06-10T19:45:00Z'
       },
@@ -139,7 +141,8 @@ export const fakeSoldCar = {
           'ABS',
           'Подушки безопасности'
         ],
-        imageUrl: 'https://via.placeholder.com/300x200?text=Kia+Rio+2019',
+        imageUrl:
+          'https://avatars.mds.yandex.net/get-autoru-vos/2015661/b9be7dabd1dbee23d52e3bda8af37589/456x342',
         createdAt: '2024-06-05T12:00:00Z',
         soldAt: '2024-06-11T13:05:00Z'
       },
@@ -166,7 +169,8 @@ export const fakeSoldCar = {
           'Панорамная крыша',
           'Тепловой насос'
         ],
-        imageUrl: 'https://via.placeholder.com/300x200?text=BYD+Seal+2023',
+        imageUrl:
+          'https://cn.pa-server.ru/img/1/2025/08/8079557/1754077767.9528.high.webp',
         createdAt: '2024-06-06T14:30:00Z',
         soldAt: '2024-06-12T20:00:00Z'
       },
@@ -194,7 +198,7 @@ export const fakeSoldCar = {
           'Камера 360'
         ],
         imageUrl:
-          'https://via.placeholder.com/300x200?text=Nissan+X-Trail+2016',
+          'https://files2.aster.kz/market/users/2025-6/c1203963_123_eec7c4ee-8a9d-4536-91d5-3c9819090590_L_blur_resolution1920x1440.webp_L_blur_resolution1920x1440.webp',
         createdAt: '2024-06-07T11:00:00Z',
         soldAt: '2024-06-13T15:40:00Z'
       },
@@ -222,7 +226,7 @@ export const fakeSoldCar = {
           'Мультируль'
         ],
         imageUrl:
-          'https://via.placeholder.com/300x200?text=Hyundai+Solaris+2020',
+          'https://s9.auto.drom.ru/photo/v2/IZyit9hXJQ-UTBQ0JeKvtKnkk_amL3kU1VIiBLiueEVxCk0xQ4IJqgUSko9eO_tg6j3tiXEmOSNgTWLz/gen1200.jpg',
         createdAt: '2024-06-08T18:00:00Z',
         soldAt: '2024-06-14T11:30:00Z'
       },
@@ -250,7 +254,8 @@ export const fakeSoldCar = {
           'Доп. бак',
           'Кенгурятник'
         ],
-        imageUrl: 'https://via.placeholder.com/300x200?text=Toyota+Prado+2017',
+        imageUrl:
+          'https://avatars.mds.yandex.net/get-autoru-vos/1699199/3f33d531cbe6e6a2a036d4446bc6095f/456x342',
         createdAt: '2024-06-09T13:30:00Z',
         soldAt: '2024-06-16T17:20:00Z'
       },
@@ -278,7 +283,7 @@ export const fakeSoldCar = {
           'Электростеклоподъёмники'
         ],
         imageUrl:
-          'https://via.placeholder.com/300x200?text=Chevrolet+Spark+2018',
+          'https://s.auto.drom.ru/i24276/c/photos/fullsize/chevrolet/spark/chevrolet_spark_1110318.jpg',
         createdAt: '2024-06-10T09:00:00Z',
         soldAt: '2024-06-15T10:15:00Z'
       },
@@ -300,7 +305,8 @@ export const fakeSoldCar = {
         description:
           'Продано Тимуру Ж. — для строительства и перевозок, усиленная рама.',
         features: ['Дизель 3.0', 'Механика', 'Грузоподъёмность 1 т', 'Лебёдка'],
-        imageUrl: 'https://via.placeholder.com/300x200?text=Isuzu+D-Max+2020',
+        imageUrl:
+          'https://frankfurt.apollo.olxcdn.com/v1/files/bi7978fiz4p32-UZ/image;s=1000x750',
         createdAt: '2024-06-11T16:00:00Z',
         soldAt: '2024-06-18T14:50:00Z'
       },
@@ -328,7 +334,8 @@ export const fakeSoldCar = {
           'ABS',
           'ЭРА-ГЛОНАСС'
         ],
-        imageUrl: 'https://via.placeholder.com/300x200?text=Kia+Rio+Taxi+2021',
+        imageUrl:
+          'https://files2.aster.kz/market/aster/2024-11/288712_efd82851-fafc-4e51-8c1b-3e6099dc64b3_L_resolution2085x1173.webp',
         createdAt: '2024-06-12T12:00:00Z',
         soldAt: '2024-06-19T16:30:00Z'
       },
@@ -356,7 +363,8 @@ export const fakeSoldCar = {
           'Круиз',
           'Парктроники'
         ],
-        imageUrl: 'https://via.placeholder.com/300x200?text=Mercedes+E+2016',
+        imageUrl:
+          'https://tradein-kuntsevo.ru/upload/resize_cache/webp/resize_cache/iblock/b90/6g6siq9ln5pa8y4id6hqqtb2lhtk5cib/720_540_1/0b4bcf2e-a444-4bb3-a286-3719c8750bc3.webp',
         createdAt: '2024-06-13T15:30:00Z',
         soldAt: '2024-06-20T12:10:00Z'
       },
@@ -383,7 +391,7 @@ export const fakeSoldCar = {
           'Подогрев руля',
           'Apple CarPlay'
         ],
-        imageUrl: 'https://via.placeholder.com/300x200?text=Toyota+RAV4+2021',
+        imageUrl: 'https://iat.ru/uploads/origin/models/360897/1.webp',
         createdAt: '2024-06-14T10:00:00Z',
         soldAt: '2024-06-21T18:40:00Z'
       },
@@ -405,7 +413,7 @@ export const fakeSoldCar = {
         description:
           'Продано Еркебулану С. — для охоты и рыбалки, внедорожник, механика.',
         features: ['Механика', 'Полный привод', 'Защита картера', 'Лебёдка'],
-        imageUrl: 'https://via.placeholder.com/300x200?text=UAZ+Hunter+2019',
+        imageUrl: 'https://www.auto-data.net/images/f109/UAZ-Hunter-315195.jpg',
         createdAt: '2024-06-15T17:00:00Z',
         soldAt: '2024-06-22T13:25:00Z'
       },
@@ -427,7 +435,7 @@ export const fakeSoldCar = {
         description:
           'Продано Динаре К. — купе, кожа, спорт-режим, выглядит как новая.',
         features: ['Купе', 'Кожа', 'Спорт-режим', 'LED', 'Панорамная крыша'],
-        imageUrl: 'https://via.placeholder.com/300x200?text=BMW+4+Series+2018',
+        imageUrl: 'https://a.d-cd.net/xiW_bn5c50CqPXPTNdKtzNg-Xys-960.jpg',
         createdAt: '2024-06-16T14:00:00Z',
         soldAt: '2024-06-24T17:00:00Z'
       },
@@ -455,7 +463,8 @@ export const fakeSoldCar = {
           'ТВ в салоне',
           'Климат 3 зоны'
         ],
-        imageUrl: 'https://via.placeholder.com/300x200?text=Kia+Carnival+2020',
+        imageUrl:
+          'https://files2.aster.kz/market/aster/2024-5/c1062970_4cf7e312-d666-4cd5-9aca-79eed998682c_L_resolution2085x1173.webp',
         createdAt: '2024-06-17T11:00:00Z',
         soldAt: '2024-06-25T15:30:00Z'
       },
@@ -482,7 +491,7 @@ export const fakeSoldCar = {
           'ABS',
           'Электрозеркала'
         ],
-        imageUrl: 'https://via.placeholder.com/300x200?text=Renault+Logan+2019',
+        imageUrl: 'https://rdm-import.ru/image/product/39450/2.JPG',
         createdAt: '2024-06-18T18:00:00Z',
         soldAt: '2024-06-26T11:45:00Z'
       },
@@ -510,7 +519,8 @@ export const fakeSoldCar = {
           'Навигация',
           'Марковые диски'
         ],
-        imageUrl: 'https://via.placeholder.com/300x200?text=Lexus+RX+350+2019',
+        imageUrl:
+          'https://arendacar.ru/wp-content/uploads/2023/10/3ee9efc59c466956fb34d5e79fbd735a.jpg',
         createdAt: '2024-06-19T13:00:00Z',
         soldAt: '2024-06-27T19:10:00Z'
       },
@@ -538,7 +548,7 @@ export const fakeSoldCar = {
           'Камера заднего вида'
         ],
         imageUrl:
-          'https://via.placeholder.com/300x200?text=Toyota+Corolla+2022',
+          'https://files.aster.kz/market/users/2023-3/h779836_f1b0174e-1c39-4270-a39d-7546b2d5cedc_L_blur_resolution1920x1920.webp',
         createdAt: '2024-06-30T09:30:00Z',
         soldAt: '2024-07-05T14:00:00Z'
       }

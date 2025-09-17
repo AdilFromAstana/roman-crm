@@ -21,7 +21,8 @@ export const fakeBringCar = {
         employeeId: 'emp-2',
         description:
           'Отличное состояние, один хозяин, полный комплект, не битая, не крашеная.',
-        imageUrl: '/images/toyota-camry-2020.jpg',
+        imageUrl:
+          'https://cs.copart.com/v1/AUTH_svc.pdoc00001/ids-c-prod-lpp/0725/a7dce87fb39d4f378c9f3f4aa091a6cc_hrs.jpg',
         features: [
           'Камера 360°',
           'Адаптивный круиз-контроль',
@@ -43,7 +44,8 @@ export const fakeBringCar = {
         employeeId: 'emp-1',
         description:
           'Автомобиль в идеальном состоянии, вложений не требует, все сервисы по регламенту.',
-        imageUrl: '/images/hyundai-solaris-2021.jpg',
+        imageUrl:
+          'https://s9.auto.drom.ru/photo/v2/IZyit9hXJQ-UTBQ0JeKvtKnkk_amL3kU1VIiBLiueEVxCk0xQ4IJqgUSko9eO_tg6j3tiXEmOSNgTWLz/gen1200.jpg',
         features: [
           'Камера 360°',
           'Адаптивный круиз-контроль',
@@ -65,7 +67,8 @@ export const fakeBringCar = {
         employeeId: 'emp-3',
         description:
           'Новая машина, первый хозяин, гарантия до 2026, полная комплектация.',
-        imageUrl: '/images/kia-rio-2022.jpg',
+        imageUrl:
+          'https://www.aelita.ua/wp-content/uploads/2021/06/IMG_0907-scaled-1140x843.jpg',
         features: [
           'Камера 360°',
           'Адаптивный круиз-контроль',
@@ -87,7 +90,8 @@ export const fakeBringCar = {
         employeeId: 'emp-4',
         description:
           'Полный привод, климат-контроль, панорамная крыша, отличный вариант для семьи.',
-        imageUrl: '/images/nissan-x-trail-2019.jpg',
+        imageUrl:
+          'https://files2.aster.kz/market/users/2024-2/c1003192_123_4bb417a9-7868-4014-9c3b-c14629ed02b1_L_blur_resolution1920x1440.webp_L_blur_resolution1920x1440.webp',
         features: [
           'Камера 360°',
           'Адаптивный круиз-контроль',
@@ -109,7 +113,8 @@ export const fakeBringCar = {
         employeeId: 'emp-2',
         description:
           'Дизель, полный привод, отличная динамика и комфорт, в идеальном техсостоянии.',
-        imageUrl: '/images/vw-tiguan-2020.jpg',
+        imageUrl:
+          'https://autonxt.net/wp-content/uploads/2020/08/2020_Volkswagen_Tiguan_SEL_4Motion_1.jpg',
         features: [
           'Камера 360°',
           'Адаптивный круиз-контроль',
@@ -131,7 +136,7 @@ export const fakeBringCar = {
         employeeId: 'emp-1',
         description:
           'Полный привод, адаптивный круиз, камера 360, кожаный салон, не требует вложений.',
-        imageUrl: '/images/toyota-rav4-2021.jpg',
+        imageUrl: 'https://iat.ru/uploads/origin/models/360897/1.webp',
         features: [
           'Камера 360°',
           'Адаптивный круиз-контроль',
@@ -153,7 +158,8 @@ export const fakeBringCar = {
         employeeId: 'emp-3',
         description:
           'Японец, в отличном состоянии, обслужен у официала, не крашен, не бит.',
-        imageUrl: '/images/mazda-cx5-2020.jpg',
+        imageUrl:
+          'https://avatars.mds.yandex.net/get-autoru-vos/6147753/0d5a8b14e6ad01bf587d713c8b059282/1200x900',
         features: [
           'Камера 360°',
           'Адаптивный круиз-контроль',
@@ -175,7 +181,7 @@ export const fakeBringCar = {
         employeeId: 'emp-4',
         description:
           'Надёжный внедорожник, 4WD, отличная шумоизоляция, обслужен регулярно.',
-        imageUrl: '/images/honda-cr-v-2019.jpg',
+        imageUrl: 'https://autowise.ca/wp-content/uploads/2024/06/24029-1.jpg',
         features: [
           'Камера 360°',
           'Адаптивный круиз-контроль',
@@ -197,7 +203,8 @@ export const fakeBringCar = {
         employeeId: 'emp-2',
         description:
           'Премиум-класс, кожа, подогрев всех сидений, люк, климат, в идеальном состоянии.',
-        imageUrl: '/images/lexus-rx350-2018.jpg',
+        imageUrl:
+          'https://arendacar.ru/wp-content/uploads/2023/10/3ee9efc59c466956fb34d5e79fbd735a.jpg',
         features: [
           'Камера 360°',
           'Адаптивный круиз-контроль',
@@ -219,7 +226,8 @@ export const fakeBringCar = {
         employeeId: 'emp-1',
         description:
           'Дизель xDrive, M-пакет, пневмоподвеска, вложений не требует, один хозяин.',
-        imageUrl: '/images/bmw-x5-2020.jpg',
+        imageUrl:
+          'https://i.simpalsmedia.com/999.md/BoardImages/900x900/b53afa00eab3b789fb69b786a25c664b.jpg',
         features: [
           'Камера 360°',
           'Адаптивный круиз-контроль',
@@ -241,7 +249,8 @@ export const fakeBringCar = {
         employeeId: 'emp-3',
         description:
           'Кожаный салон, панорамная крыша, адаптивные фары, обслужена у официала.',
-        imageUrl: '/images/mercedes-glc-2019.jpg',
+        imageUrl:
+          'https://avatars.mds.yandex.net/get-autoru-vos/1728862/7f4146e0e4aadcf0574660c5c1fb275d/456x342',
         features: [
           'Камера 360°',
           'Адаптивный круиз-контроль',
@@ -263,7 +272,8 @@ export const fakeBringCar = {
         employeeId: 'emp-4',
         description:
           'Quattro, виртуальная приборка, Bang & Olufsen, идеальное состояние.',
-        imageUrl: '/images/audi-q5-2021.jpg',
+        imageUrl:
+          'https://avatars.mds.yandex.net/get-autoru-vos/6036486/67d8506418a16ad14682ab0cf4137e16/456x342',
         features: [
           'Камера 360°',
           'Адаптивный круиз-контроль',
@@ -285,7 +295,8 @@ export const fakeBringCar = {
         employeeId: 'emp-2',
         description:
           'Идеальный внедорожник для бездорожья, полный привод, блокировки, неубиваемая машина.',
-        imageUrl: '/images/toyota-prado-2018.jpg',
+        imageUrl:
+          'https://avatars.mds.yandex.net/get-autoru-vos/2168121/731361697bb71b082974b5a018e3f47f/456x342',
         features: [
           'Камера 360°',
           'Адаптивный круиз-контроль',
@@ -307,7 +318,8 @@ export const fakeBringCar = {
         employeeId: 'emp-1',
         description:
           'Super Select 4WD, кожа, подогрев, камера заднего вида, отличное состояние.',
-        imageUrl: '/images/mitsubishi-pajero-2020.jpg',
+        imageUrl:
+          'https://st4.depositphotos.com/11618586/39421/i/1600/depositphotos_394212960-stock-photo-novosibirsk-russia-july-2020-black.jpg',
         features: [
           'Камера 360°',
           'Адаптивный круиз-контроль',
@@ -329,7 +341,8 @@ export const fakeBringCar = {
         employeeId: 'emp-3',
         description:
           'Полный фарш, 7 мест, пневмоподвеска, кожа, отличный семейный внедорожник.',
-        imageUrl: '/images/ssangyong-rexton-2021.jpg',
+        imageUrl:
+          'https://avatars.mds.yandex.net/get-autoru-vos/1907522/8919c99d155e438ea7798ed550713ff3/456x342',
         features: [
           'Камера 360°',
           'Адаптивный круиз-контроль',
@@ -351,7 +364,8 @@ export const fakeBringCar = {
         employeeId: 'emp-4',
         description:
           'Большой и вместительный, 7 мест, обслужен, вложений не требует.',
-        imageUrl: '/images/chevrolet-captiva-2017.jpg',
+        imageUrl:
+          'https://avatars.mds.yandex.net/get-autoru-vos/5207325/5b3c8f1f071b5ecd0d0d1a1790b6f917/456x342',
         features: [
           'Камера 360°',
           'Адаптивный круиз-контроль',
@@ -373,7 +387,8 @@ export const fakeBringCar = {
         employeeId: 'emp-2',
         description:
           'Надёжная и экономичная, полный пакет, в отличном состоянии.',
-        imageUrl: '/images/skoda-octavia-2020.jpg',
+        imageUrl:
+          'https://cdn3.riastatic.com/photos/ir/new/auto/photo/skoda_octavia__614896338-620x415x70.webp',
         features: [
           'Камера 360°',
           'Адаптивный круиз-контроль',
@@ -395,7 +410,8 @@ export const fakeBringCar = {
         employeeId: 'emp-1',
         description:
           'Полный привод, механика, отличный вариант для города и бездорожья.',
-        imageUrl: '/images/renault-duster-2021.jpg',
+        imageUrl:
+          'https://avatars.mds.yandex.net/get-autoru-vos/6087926/4c06145a15d53f9f1abefbe236b2348e/456x342',
         features: [
           'Камера 360°',
           'Адаптивный круиз-контроль',
@@ -417,7 +433,8 @@ export const fakeBringCar = {
         employeeId: 'emp-3',
         description:
           'Турбомотор, панорамная крыша, кожа, современный дизайн, отличное состояние.',
-        imageUrl: '/images/geely-coolray-2022.jpg',
+        imageUrl:
+          'https://avatars.mds.yandex.net/get-autoru-vos/5911025/8b1c656b7a66844d5487dd64981f5d75/456x342',
         features: [
           'Камера 360°',
           'Адаптивный круиз-контроль',
@@ -439,7 +456,8 @@ export const fakeBringCar = {
         employeeId: 'emp-4',
         description:
           'Флагманский кроссовер, 7 мест, два экрана, адаптивный круиз, новая машина.',
-        imageUrl: '/images/chery-tiggo8-2023.jpg',
+        imageUrl:
+          'https://files2.aster.kz/market/aster/2025-9/590534_8d2233ff-98e2-4bd3-95cb-f847a0e5172b_S_resolution810x495.webp',
         features: [
           'Камера 360°',
           'Адаптивный круиз-контроль',
@@ -461,7 +479,8 @@ export const fakeBringCar = {
         employeeId: 'emp-2',
         description:
           'Полный комплект, камера 360, подогрев руля и сидений, отличное состояние.',
-        imageUrl: '/images/haval-jolion-2022.jpg',
+        imageUrl:
+          'https://www.major-auto.ru/cars_images/1836248/2D/medium/1836248_1_30685_15461512.jpg',
         features: [
           'Камера 360°',
           'Адаптивный круиз-контроль',
@@ -483,7 +502,8 @@ export const fakeBringCar = {
         employeeId: 'emp-1',
         description:
           'Надёжная как швейцарские часы, один хозяин, обслужена, не бита.',
-        imageUrl: '/images/toyota-corolla-2020.jpg',
+        imageUrl:
+          'https://cdn3.riastatic.com/photosnew/auto/photo/toyota_corolla__605145368f.jpg',
         features: [
           'Камера 360°',
           'Адаптивный круиз-контроль',
@@ -505,7 +525,8 @@ export const fakeBringCar = {
         employeeId: 'emp-3',
         description:
           'Полный привод, панорамная крыша, виртуальная приборка, отличный кроссовер.',
-        imageUrl: '/images/kia-sportage-2021.jpg',
+        imageUrl:
+          'https://avatars.mds.yandex.net/get-autoru-vos/5504534/52b282b0b4a47be2e9dae6e8cfabe506/456x342',
         features: [
           'Камера 360°',
           'Адаптивный круиз-контроль',
@@ -527,7 +548,8 @@ export const fakeBringCar = {
         employeeId: 'emp-4',
         description:
           'Свежий рестайлинг, отличная шумка, климат-контроль, не требует вложений.',
-        imageUrl: '/images/hyundai-tucson-2020.jpg',
+        imageUrl:
+          'https://avatars.mds.yandex.net/i?id=c61b722669cf66e53a72834a3b9dd77e9a81e502-4290742-images-thumbs&n=13',
         features: [
           'Камера 360°',
           'Адаптивный круиз-контроль',
@@ -549,7 +571,8 @@ export const fakeBringCar = {
         employeeId: 'emp-2',
         description:
           'Мягкая подвеска, кожаный салон, люк, отличный вариант для комфортных поездок.',
-        imageUrl: '/images/nissan-murano-2018.jpg',
+        imageUrl:
+          'https://avatars.mds.yandex.net/get-autoru-vos/11372349/bfa973a0837ff23bfc3e23bad9d11326/456x342',
         features: [
           'Камера 360°',
           'Адаптивный круиз-контроль',
@@ -571,7 +594,8 @@ export const fakeBringCar = {
         employeeId: 'emp-1',
         description:
           'Премиум-кроссовер, 7 мест, кожа,BOSE, адаптивный круиз, в отличном состоянии.',
-        imageUrl: '/images/infiniti-qx60-2019.jpg',
+        imageUrl:
+          'https://avatars.mds.yandex.net/get-autoru-vos/2173862/4b8daaac14d8ba9c3137cd588125a0cf/456x342',
         features: [
           'Камера 360°',
           'Адаптивный круиз-контроль',
@@ -593,7 +617,8 @@ export const fakeBringCar = {
         employeeId: 'emp-3',
         description:
           '3.5 л V6, полный привод, 3 ряда сидений, отличный семейный автомобиль.',
-        imageUrl: '/images/ford-explorer-2020.jpg',
+        imageUrl:
+          'https://avatars.mds.yandex.net/get-autoru-vos/11385452/7780dd1479172df0ca864b3fab15a9d0/456x342',
         features: [
           'Полный привод',
           'Кожаный салон',
@@ -615,7 +640,8 @@ export const fakeBringCar = {
         employeeId: 'emp-4',
         description:
           'Quadra-Trac II, кожа, люк, подогрев, отличное состояние, не бит.',
-        imageUrl: '/images/jeep-grand-cherokee-2019.jpg',
+        imageUrl:
+          'https://avatars.mds.yandex.net/get-autoru-vos/2164928/494a8da6a4e98da330e584f4676d0294/456x342',
         features: [
           'Полный привод',
           'Кожаный салон',
@@ -637,7 +663,8 @@ export const fakeBringCar = {
         employeeId: 'emp-2',
         description:
           'Премиум-безопасность, адаптивный круиз, массаж сидений, обслужена у официала.',
-        imageUrl: '/images/volvo-xc60-2021.jpg',
+        imageUrl:
+          'https://s.auto.drom.ru/i24303/c/photos/fullsize/volvo/xc60/volvo_xc60_1257564.jpg',
         features: [
           'Панорамная крыша',
           'Кожаный салон',
@@ -659,7 +686,8 @@ export const fakeBringCar = {
         employeeId: 'emp-1',
         description:
           'Long Range, автопилот, обновления по воздуху, почти новая, идеальное состояние.',
-        imageUrl: '/images/tesla-model-y-2023.jpg',
+        imageUrl:
+          'https://moscowteslaclub.ru/upload/resize_cache/iblock/b23/964_542_2/43n9bksss9021qiunrvuyd9yb83s4y78.jpg',
         features: [
           'Камера 360°',
           'Адаптивный круиз-контроль',

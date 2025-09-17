@@ -26,7 +26,7 @@ export const bringCarColumns: ColumnDef<BringCar>[] = [
     accessorKey: 'imageUrl',
     header: () => <div className='text-center'>Фото</div>,
     cell: ({ row }) => (
-      <div className='relative mx-auto h-12 w-16'>
+      <div className='relative mx-auto h-64 w-96'>
         <Image
           src={
             row.original.imageUrl ||
