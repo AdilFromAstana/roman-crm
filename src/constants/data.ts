@@ -23,47 +23,40 @@ export const navItems: NavItem[] = [
     items: []
   },
   {
-    title: 'Таргет',
-    url: '/dashboard/target',
-    icon: 'kanban',
-    shortcut: ['k', 'k'],
-    items: []
-  },
-  {
     title: 'Клиенты',
     url: '/dashboard/clients',
     icon: 'kanban',
     shortcut: ['k', 'k'],
     items: []
-  },
-  {
-    title: 'Маркетинг',
-    url: '/dashboard/marketing',
-    icon: 'kanban',
-    shortcut: ['k', 'k'],
-    items: []
-  },
-  {
-    title: 'Профиль',
-    url: '#', // Placeholder as there is no direct link for the parent
-    icon: 'billing',
-    isActive: true,
-
-    items: [
-      {
-        title: 'Profile',
-        url: '/dashboard/profile',
-        icon: 'userPen',
-        shortcut: ['m', 'm']
-      },
-      {
-        title: 'Login',
-        shortcut: ['l', 'l'],
-        url: '/',
-        icon: 'login'
-      }
-    ]
   }
+  // {
+  //   title: 'Маркетинг',
+  //   url: '/dashboard/marketing',
+  //   icon: 'kanban',
+  //   shortcut: ['k', 'k'],
+  //   items: []
+  // },
+  // {
+  //   title: 'Профиль',
+  //   url: '#', // Placeholder as there is no direct link for the parent
+  //   icon: 'billing',
+  //   isActive: true,
+
+  //   items: [
+  //     {
+  //       title: 'Profile',
+  //       url: '/dashboard/profile',
+  //       icon: 'userPen',
+  //       shortcut: ['m', 'm']
+  //     },
+  //     {
+  //       title: 'Login',
+  //       shortcut: ['l', 'l'],
+  //       url: '/',
+  //       icon: 'login'
+  //     }
+  //   ]
+  // }
 ];
 
 export interface SaleUser {

@@ -12,7 +12,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { AreaGraph } from './area-graph';
 import { BarGraph } from './bar-graph';
 import { PieGraph } from './pie-graph';
-import { RecentSales } from './recent-sales';
+import { TopSalesPeople } from './recent-sales';
 import { IconTrendingUp, IconTrendingDown } from '@tabler/icons-react';
 import { Badge } from '@/components/ui/badge';
 
@@ -22,121 +22,135 @@ export default function OverViewPage() {
       <div className='flex flex-1 flex-col space-y-2'>
         <div className='flex items-center justify-between space-y-2'>
           <h2 className='text-2xl font-bold tracking-tight'>
-            Hi, Welcome back 👋
+            Автосалон — статистика 🚗
           </h2>
           <div className='hidden items-center space-x-2 md:flex'>
-            <Button>Download</Button>
+            <Button>Выгрузить отчёт</Button>
           </div>
         </div>
         <Tabs defaultValue='overview' className='space-y-4'>
           <TabsList>
-            <TabsTrigger value='overview'>Overview</TabsTrigger>
+            <TabsTrigger value='overview'>Обзор</TabsTrigger>
             <TabsTrigger value='analytics' disabled>
-              Analytics
+              Аналитика
             </TabsTrigger>
           </TabsList>
           <TabsContent value='overview' className='space-y-4'>
             <div className='*:data-[slot=card]:from-primary/5 *:data-[slot=card]:to-card dark:*:data-[slot=card]:bg-card grid grid-cols-1 gap-4 px-4 *:data-[slot=card]:bg-gradient-to-t *:data-[slot=card]:shadow-xs lg:px-6 @xl/main:grid-cols-2 @5xl/main:grid-cols-4'>
+              {/* Выручка от продаж */}
               <Card className='@container/card'>
                 <CardHeader>
-                  <CardDescription>Total Revenue</CardDescription>
+                  <CardDescription>Выручка за месяц</CardDescription>
                   <CardTitle className='text-2xl font-semibold tabular-nums @[250px]/card:text-3xl'>
-                    $1,250.00
+                    12.800.500
                   </CardTitle>
                   <CardAction>
                     <Badge variant='outline'>
                       <IconTrendingUp />
-                      +12.5%
+                      +8.2%
                     </Badge>
                   </CardAction>
                 </CardHeader>
                 <CardFooter className='flex-col items-start gap-1.5 text-sm'>
-                  <div className='line-clamp-1 flex gap-2 font-medium'>
-                    Trending up this month <IconTrendingUp className='size-4' />
+                  <div className='flex gap-2 font-medium'>
+                    Продажи растут <IconTrendingUp className='size-4' />
                   </div>
                   <div className='text-muted-foreground'>
-                    Visitors for the last 6 months
+                    По сравнению с прошлым месяцем
                   </div>
                 </CardFooter>
               </Card>
+
+              {/* Новые загоны */}
               <Card className='@container/card'>
                 <CardHeader>
-                  <CardDescription>New Customers</CardDescription>
+                  <CardDescription>Новые загоны</CardDescription>
                   <CardTitle className='text-2xl font-semibold tabular-nums @[250px]/card:text-3xl'>
-                    1,234
+                    87
                   </CardTitle>
                   <CardAction>
                     <Badge variant='outline'>
                       <IconTrendingDown />
-                      -20%
+                      -12%
                     </Badge>
                   </CardAction>
                 </CardHeader>
                 <CardFooter className='flex-col items-start gap-1.5 text-sm'>
-                  <div className='line-clamp-1 flex gap-2 font-medium'>
-                    Down 20% this period <IconTrendingDown className='size-4' />
+                  <div className='flex gap-2 font-medium'>
+                    Снижение активности <IconTrendingDown className='size-4' />
                   </div>
                   <div className='text-muted-foreground'>
-                    Acquisition needs attention
+                    Меньше машин привезли в этом месяце
                   </div>
                 </CardFooter>
               </Card>
+
+              {/* Активные машины на площадке */}
               <Card className='@container/card'>
                 <CardHeader>
-                  <CardDescription>Active Accounts</CardDescription>
+                  <CardDescription>Активные машины</CardDescription>
                   <CardTitle className='text-2xl font-semibold tabular-nums @[250px]/card:text-3xl'>
-                    45,678
+                    142
                   </CardTitle>
                   <CardAction>
                     <Badge variant='outline'>
                       <IconTrendingUp />
-                      +12.5%
+                      +5%
                     </Badge>
                   </CardAction>
                 </CardHeader>
                 <CardFooter className='flex-col items-start gap-1.5 text-sm'>
-                  <div className='line-clamp-1 flex gap-2 font-medium'>
-                    Strong user retention <IconTrendingUp className='size-4' />
+                  <div className='flex gap-2 font-medium'>
+                    Больше машин в продаже <IconTrendingUp className='size-4' />
                   </div>
                   <div className='text-muted-foreground'>
-                    Engagement exceed targets
+                    Включая новые поступления
                   </div>
                 </CardFooter>
               </Card>
+
+              {/* Средняя маржа */}
               <Card className='@container/card'>
                 <CardHeader>
-                  <CardDescription>Growth Rate</CardDescription>
+                  <CardDescription>Средняя маржа</CardDescription>
                   <CardTitle className='text-2xl font-semibold tabular-nums @[250px]/card:text-3xl'>
-                    4.5%
+                    18.7%
                   </CardTitle>
                   <CardAction>
                     <Badge variant='outline'>
                       <IconTrendingUp />
-                      +4.5%
+                      +1.3%
                     </Badge>
                   </CardAction>
                 </CardHeader>
                 <CardFooter className='flex-col items-start gap-1.5 text-sm'>
-                  <div className='line-clamp-1 flex gap-2 font-medium'>
-                    Steady performance increase{' '}
-                    <IconTrendingUp className='size-4' />
+                  <div className='flex gap-2 font-medium'>
+                    Стабильный рост <IconTrendingUp className='size-4' />
                   </div>
                   <div className='text-muted-foreground'>
-                    Meets growth projections
+                    По сравнению с прошлым кварталом
                   </div>
                 </CardFooter>
               </Card>
             </div>
+
             <div className='grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-7'>
+              {/* График по загонам/продажам */}
               <div className='col-span-4'>
                 <BarGraph />
               </div>
+
+              {/* Недавние сделки */}
               <Card className='col-span-4 md:col-span-3'>
-                <RecentSales />
+                <TopSalesPeople />
               </Card>
+
+              {/* Динамика продаж */}
               <div className='col-span-4'>
                 <AreaGraph />
               </div>
+
+              {/* Разбивка по маркам */}
               <div className='col-span-4 md:col-span-3'>
                 <PieGraph />
               </div>

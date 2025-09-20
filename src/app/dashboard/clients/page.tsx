@@ -16,7 +16,12 @@ import { Clients } from '@/types';
 
 export default function ClientsPage() {
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [client, setClient] = useState<Clients | null>(null);
+  const [client, setClient] = useState<{
+    message: string;
+    success: boolean;
+    time: string;
+    product: Clients;
+  } | null>(null);
   const [data, setData] = useState({ products: [], total_products: 0 });
   const config = TABLE_CONFIG.clients;
 

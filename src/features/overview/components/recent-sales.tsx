@@ -7,64 +7,77 @@ import {
   CardDescription
 } from '@/components/ui/card';
 
-const salesData = [
+const topSalesPeople = [
   {
-    name: 'Olivia Martin',
-    email: 'olivia.martin@email.com',
-    avatar: 'https://api.slingacademy.com/public/sample-users/1.png',
-    fallback: 'OM',
-    amount: '+$1,999.00'
+    name: 'Алексей Жумагулов',
+    role: 'Старший менеджер по продажам',
+    avatar: 'https://api.slingacademy.com/public/sample-users/10.png',
+    fallback: 'АЖ',
+    sales: '₸ 12 500 000',
+    growth: '+15%'
   },
   {
-    name: 'Jackson Lee',
-    email: 'jackson.lee@email.com',
-    avatar: 'https://api.slingacademy.com/public/sample-users/2.png',
-    fallback: 'JL',
-    amount: '+$39.00'
+    name: 'Мария Абилова',
+    role: 'Региональный менеджер (Алматы)',
+    avatar: 'https://api.slingacademy.com/public/sample-users/11.png',
+    fallback: 'МА',
+    sales: '₸ 9 850 000',
+    growth: '+8%'
   },
   {
-    name: 'Isabella Nguyen',
-    email: 'isabella.nguyen@email.com',
-    avatar: 'https://api.slingacademy.com/public/sample-users/3.png',
-    fallback: 'IN',
-    amount: '+$299.00'
+    name: 'Данияр Садыков',
+    role: 'Аккаунт-менеджер',
+    avatar: 'https://api.slingacademy.com/public/sample-users/12.png',
+    fallback: 'ДС',
+    sales: '₸ 7 520 000',
+    growth: '+12%'
   },
   {
-    name: 'William Kim',
-    email: 'will@email.com',
-    avatar: 'https://api.slingacademy.com/public/sample-users/4.png',
-    fallback: 'WK',
-    amount: '+$99.00'
+    name: 'Эльмира Нурланова',
+    role: 'Менеджер по ключевым клиентам',
+    avatar: 'https://api.slingacademy.com/public/sample-users/13.png',
+    fallback: 'ЭН',
+    sales: '₸ 6 980 000',
+    growth: '+6%'
   },
   {
-    name: 'Sofia Davis',
-    email: 'sofia.davis@email.com',
-    avatar: 'https://api.slingacademy.com/public/sample-users/5.png',
-    fallback: 'SD',
-    amount: '+$39.00'
+    name: 'Айдос Бекенов',
+    role: 'Менеджер по продажам',
+    avatar: 'https://api.slingacademy.com/public/sample-users/14.png',
+    fallback: 'АБ',
+    sales: '₸ 5 540 000',
+    growth: '+10%'
   }
 ];
 
-export function RecentSales() {
+const medals = ['🥇', '🥈', '🥉'];
+
+export function TopSalesPeople() {
   return (
     <Card className='h-full'>
       <CardHeader>
-        <CardTitle>Recent Sales</CardTitle>
-        <CardDescription>You made 265 sales this month.</CardDescription>
+        <CardTitle>Лучшие продавцы</CardTitle>
+        <CardDescription>Результаты за этот месяц</CardDescription>
       </CardHeader>
       <CardContent>
-        <div className='space-y-8'>
-          {salesData.map((sale, index) => (
+        <div className='space-y-6'>
+          {topSalesPeople.map((person, index) => (
             <div key={index} className='flex items-center'>
-              <Avatar className='h-9 w-9'>
-                <AvatarImage src={sale.avatar} alt='Avatar' />
-                <AvatarFallback>{sale.fallback}</AvatarFallback>
+              <Avatar className='h-10 w-10'>
+                <AvatarImage src={person.avatar} alt={person.name} />
+                <AvatarFallback>{person.fallback}</AvatarFallback>
               </Avatar>
-              <div className='ml-4 space-y-1'>
-                <p className='text-sm leading-none font-medium'>{sale.name}</p>
-                <p className='text-muted-foreground text-sm'>{sale.email}</p>
+              <div className='ml-4 space-y-0.5'>
+                <p className='text-sm leading-none font-medium'>
+                  {medals[index] ? medals[index] + ' ' : ''}
+                  {person.name}
+                </p>
+                <p className='text-muted-foreground text-xs'>{person.role}</p>
               </div>
-              <div className='ml-auto font-medium'>{sale.amount}</div>
+              <div className='ml-auto text-right'>
+                <p className='text-sm font-semibold'>{person.sales}</p>
+                <p className='text-xs text-green-600'>{person.growth}</p>
+              </div>
             </div>
           ))}
         </div>

@@ -9,15 +9,15 @@ import {
   DialogTrigger
 } from '@/components/ui/dialog';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Badge } from '@/components/ui/badge';
-import { Separator } from '@/components/ui/separator';
 import { Clients } from '@/types';
 import { Eye } from 'lucide-react';
 import { format } from 'date-fns';
 import { ru } from 'date-fns/locale';
 
 interface ClientViewModalProps {
-  client: Clients | null;
+  client: {
+    product: Clients;
+  } | null;
   trigger?: React.ReactNode;
   open: boolean;
   setOpen: (v: boolean) => void;
@@ -29,7 +29,9 @@ export function ClientViewModal({
   open,
   setOpen
 }: ClientViewModalProps) {
-  if (!client) return null;
+  if (!client?.product) return null;
+
+  console.log('client: ', client);
 
   return (
     <Dialog open={open} onOpenChange={setOpen}>
@@ -55,25 +57,25 @@ export function ClientViewModal({
                   <h3 className='text-muted-foreground text-sm font-medium'>
                     Имя
                   </h3>
-                  <p className='text-lg'>{client.firstName}</p>
+                  <p className='text-lg'>{client.product.firstName}</p>
                 </div>
                 <div>
                   <h3 className='text-muted-foreground text-sm font-medium'>
                     Фамилия
                   </h3>
-                  <p className='text-lg'>{client.lastName}</p>
+                  <p className='text-lg'>{client.product.lastName}</p>
                 </div>
                 <div>
                   <h3 className='text-muted-foreground text-sm font-medium'>
                     Телефон
                   </h3>
-                  <p className='text-lg'>{client.phone}</p>
+                  <p className='text-lg'>{client.product.phone}</p>
                 </div>
                 <div>
                   <h3 className='text-muted-foreground text-sm font-medium'>
                     ID
                   </h3>
-                  <p className='text-lg'>{client.id}</p>
+                  <p className='text-lg'>{client.product.id}</p>
                 </div>
               </div>
             </CardContent>
@@ -84,7 +86,7 @@ export function ClientViewModal({
               <CardTitle>Пожелания</CardTitle>
             </CardHeader>
             <CardContent>
-              <p className='text-muted-foreground'>{client.wish}</p>
+              <p className='text-muted-foreground'>{client.product.wish}</p>
             </CardContent>
           </Card>
 
@@ -98,9 +100,13 @@ export function ClientViewModal({
                   Дата создания
                 </h3>
                 <p className='text-lg'>
-                  {format(new Date(client.createdAt), 'dd MMMM yyyy HH:mm', {
-                    locale: ru
-                  })}
+                  {format(
+                    new Date(client.product.createdAt),
+                    'dd MMMM yyyy HH:mm',
+                    {
+                      locale: ru
+                    }
+                  )}
                 </p>
               </div>
             </CardContent>
