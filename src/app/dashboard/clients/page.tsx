@@ -10,9 +10,9 @@ import { IconPlus } from '@tabler/icons-react';
 import { Suspense, useEffect, useState } from 'react';
 import { ClientModal } from '@/components/clients/client-modal';
 import { TABLE_CONFIG } from '@/constants/table-config';
-import { UniversalTable } from '@/features/products/components/product-tables/UniversalTable';
 import { ClientViewModal } from '@/components/clients/client-view-modal';
 import { Clients } from '@/types';
+import DataTable from '@/components/customTable';
 
 export default function ClientsPage() {
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -60,14 +60,7 @@ export default function ClientsPage() {
             <DataTableSkeleton columnCount={5} rowCount={8} filterCount={2} />
           }
         >
-          <UniversalTable
-            data={data.products}
-            totalItems={data.total_products}
-            columns={config.columns}
-            tableType='clients'
-            basePath='/dashboard/clients'
-            onRowClick={selectClient}
-          />
+          <DataTable />
         </Suspense>
       </div>
       <ClientViewModal

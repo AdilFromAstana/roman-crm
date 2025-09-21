@@ -1,175 +1,405 @@
+// components/ui/advanced-data-table.tsx
 'use client';
 
 import { useState, useMemo } from 'react';
 
-// Типы данных (пример — вы можете заменить на свои)
-interface User {
-  id: number;
-  name: string;
-  email: string;
-  role: string;
-  createdAt: string;
+type FilterType =
+  | 'text'
+  | 'number'
+  | 'select'
+  | 'multiselect'
+  | 'range'
+  | 'date';
+
+export interface Column<T> {
+  key: keyof T | string;
+  label: string;
+  render?: (value: any, row: T) => React.ReactNode;
+  sortable?: boolean;
+  filterable?: boolean;
+  filterType?: FilterType;
+  filterOptions?: Array<{ value: string; label: string }>;
+  hidden?: boolean;
+  width?: string;
 }
 
-// Пропсы таблицы
-interface DataTableProps {
-  data?: User[];
+interface FilterConfig<T> {
+  [key: string]: any;
 }
 
-export default function DataTable({
-  data = [
-    {
-      id: 1,
-      name: 'Алексей',
-      email: 'alex@example.com',
-      role: 'admin',
-      createdAt: '2024-01-15'
-    },
-    {
-      id: 2,
-      name: 'Мария',
-      email: 'maria@example.com',
-      role: 'user',
-      createdAt: '2024-02-20'
-    },
-    {
-      id: 3,
-      name: 'Иван',
-      email: 'ivan@example.com',
-      role: 'moderator',
-      createdAt: '2024-03-10'
-    },
-    {
-      id: 4,
-      name: 'Елена',
-      email: 'elena@example.com',
-      role: 'user',
-      createdAt: '2024-04-05'
-    },
-    {
-      id: 5,
-      name: 'Сергей',
-      email: 'sergey@example.com',
-      role: 'admin',
-      createdAt: '2024-05-12'
-    },
-    {
-      id: 6,
-      name: 'Ольга',
-      email: 'olga@example.com',
-      role: 'user',
-      createdAt: '2024-06-18'
-    },
-    {
-      id: 7,
-      name: 'Дмитрий',
-      email: 'dmitry@example.com',
-      role: 'moderator',
-      createdAt: '2024-07-22'
-    },
-    {
-      id: 8,
-      name: 'Наталья',
-      email: 'natalia@example.com',
-      role: 'user',
-      createdAt: '2024-08-30'
+interface DataTableProps<T> {
+  data: T[];
+  columns: Column<T>[];
+  totalCount?: number;
+  currentPage?: number;
+  rowsPerPage?: number;
+  onPageChange?: (page: number) => void;
+  onRowsPerPageChange?: (rows: number) => void;
+  onSort?: (key: keyof T | string, direction: 'ASC' | 'DESC') => void;
+  sortConfig?: {
+    key: keyof T | string;
+    direction: 'ASC' | 'DESC';
+  } | null;
+  filters?: FilterConfig<T>;
+  onFiltersChange?: (filters: FilterConfig<T>) => void;
+  searchFields?: (keyof T | string)[];
+  onSearch?: (term: string) => void;
+  searchTerm?: string;
+  loading?: boolean;
+  emptyMessage?: string;
+  showFilters?: boolean;
+  showColumnVisibility?: boolean;
+}
+
+export default function AdvancedDataTable<T extends { id?: any }>({
+  data = [],
+  columns = [],
+  totalCount = 0,
+  currentPage = 1,
+  rowsPerPage = 10,
+  onPageChange,
+  onRowsPerPageChange,
+  onSort,
+  sortConfig = null,
+  filters = {},
+  onFiltersChange,
+  searchFields = [],
+  onSearch,
+  searchTerm = '',
+  loading = false,
+  emptyMessage = 'Нет данных',
+  showFilters = true,
+  showColumnVisibility = true
+}: DataTableProps<T>) {
+  const [internalSearchTerm, setInternalSearchTerm] = useState(searchTerm);
+  const [internalRowsPerPage, setInternalRowsPerPage] = useState(rowsPerPage);
+  const [internalFilters, setInternalFilters] =
+    useState<FilterConfig<T>>(filters);
+  const [columnVisibility, setColumnVisibility] = useState<
+    Record<string, boolean>
+  >(
+    columns.reduce(
+      (acc, col) => ({ ...acc, [String(col.key)]: !col.hidden }),
+      {}
+    )
+  );
+  const [showFilterPanel, setShowFilterPanel] = useState(false);
+
+  // Внутренняя пагинация, если не переданы внешние обработчики
+  const [internalCurrentPage, setInternalCurrentPage] = useState(1);
+  const actualCurrentPage = currentPage || internalCurrentPage;
+  const actualRowsPerPage = onRowsPerPageChange
+    ? rowsPerPage
+    : internalRowsPerPage;
+
+  const actualFilters = onFiltersChange ? filters : internalFilters;
+
+  const handlePageChange = (page: number) => {
+    if (onPageChange) {
+      onPageChange(page);
+    } else {
+      setInternalCurrentPage(page);
     }
-  ]
-}: DataTableProps) {
-  const [searchTerm, setSearchTerm] = useState<string>('');
-  const [sortConfig, setSortConfig] = useState<{
-    key: keyof User;
-    direction: 'ascending' | 'descending';
-  } | null>(null);
-  const [currentPage, setCurrentPage] = useState<number>(1);
-  const [rowsPerPage, setRowsPerPage] = useState<number>(5);
+  };
+
+  const handleRowsPerPageChange = (rows: number) => {
+    if (onRowsPerPageChange) {
+      onRowsPerPageChange(rows);
+    } else {
+      setInternalRowsPerPage(rows);
+      setInternalCurrentPage(1);
+    }
+  };
+
+  const handleFilterChange = (key: string, value: any) => {
+    const newFilters = { ...actualFilters, [key]: value };
+    if (onFiltersChange) {
+      onFiltersChange(newFilters);
+    } else {
+      setInternalFilters(newFilters);
+    }
+    handlePageChange(1);
+  };
+
+  const clearFilters = () => {
+    const emptyFilters = Object.keys(actualFilters).reduce((acc, key) => {
+      const current = actualFilters[key];
+      if (Array.isArray(current)) {
+        return { ...acc, [key]: [] }; // multiselect
+      }
+      return { ...acc, [key]: '' }; // остальные
+    }, {});
+    if (onFiltersChange) {
+      onFiltersChange(emptyFilters as FilterConfig<T>);
+    } else {
+      setInternalFilters(emptyFilters as FilterConfig<T>);
+    }
+    if (onSearch) {
+      onSearch('');
+    } else {
+      setInternalSearchTerm('');
+    }
+    handlePageChange(1);
+  };
+
+  const toggleColumnVisibility = (key: string) => {
+    setColumnVisibility((prev) => ({
+      ...prev,
+      [key]: !prev[key]
+    }));
+  };
 
   // Фильтрация
   const filteredData = useMemo(() => {
-    return data.filter((item) =>
-      Object.values(item).some((val) =>
-        String(val).toLowerCase().includes(searchTerm.toLowerCase())
-      )
-    );
-  }, [data, searchTerm]);
+    if (!onSearch && internalSearchTerm) {
+      return data.filter((item) =>
+        searchFields.some((field) => {
+          const value = getNestedValue(item, field as string);
+          return String(value)
+            .toLowerCase()
+            .includes(internalSearchTerm.toLowerCase());
+        })
+      );
+    }
+    return data;
+  }, [data, internalSearchTerm, searchFields]);
 
   // Сортировка
   const sortedData = useMemo(() => {
-    if (!sortConfig) return filteredData;
+    if (!onSort && sortConfig) {
+      return [...filteredData].sort((a, b) => {
+        const aValue = getNestedValue(a, sortConfig.key as string);
+        const bValue = getNestedValue(b, sortConfig.key as string);
 
-    return [...filteredData].sort((a, b) => {
-      const aValue = a[sortConfig.key];
-      const bValue = b[sortConfig.key];
-
-      if (aValue < bValue) {
-        return sortConfig.direction === 'ascending' ? -1 : 1;
-      }
-      if (aValue > bValue) {
-        return sortConfig.direction === 'ascending' ? 1 : -1;
-      }
-      return 0;
-    });
+        if (aValue < bValue) {
+          return sortConfig.direction === 'ASC' ? -1 : 1;
+        }
+        if (aValue > bValue) {
+          return sortConfig.direction === 'ASC' ? 1 : -1;
+        }
+        return 0;
+      });
+    }
+    return filteredData;
   }, [filteredData, sortConfig]);
 
   // Пагинация
-  const totalPages = Math.ceil(sortedData.length / rowsPerPage);
   const paginatedData = useMemo(() => {
-    const startIndex = (currentPage - 1) * rowsPerPage;
-    return sortedData.slice(startIndex, startIndex + rowsPerPage);
-  }, [sortedData, currentPage, rowsPerPage]);
+    const startIndex = (actualCurrentPage - 1) * actualRowsPerPage;
+    return sortedData.slice(startIndex, startIndex + actualRowsPerPage);
+  }, [sortedData, actualCurrentPage, actualRowsPerPage]);
+
+  const actualTotalCount = totalCount || filteredData.length;
+  const totalPages = Math.ceil(actualTotalCount / actualRowsPerPage);
 
   // Обработчик сортировки
-  const handleSort = (key: keyof User) => {
-    let direction: 'ascending' | 'descending' = 'ascending';
+  const handleSort = (key: keyof T | string) => {
+    if (!onSort) return;
+
+    let direction: 'ASC' | 'DESC' = 'ASC';
     if (
       sortConfig &&
       sortConfig.key === key &&
-      sortConfig.direction === 'ascending'
+      sortConfig.direction === 'ASC'
     ) {
-      direction = 'descending';
+      direction = 'DESC';
     }
-    setSortConfig({ key, direction });
+    onSort(key, direction);
   };
 
-  // Сброс страницы при изменении фильтра
+  // Обработчик поиска
   const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setSearchTerm(e.target.value);
-    setCurrentPage(1);
+    const term = e.target.value;
+    if (onSearch) {
+      onSearch(term);
+    } else {
+      setInternalSearchTerm(term);
+    }
+    handlePageChange(1);
   };
 
-  // Генерация заголовков
-  const headers: { key: keyof User; label: string }[] = [
-    { key: 'name', label: 'Имя' },
-    { key: 'email', label: 'Email' },
-    { key: 'role', label: 'Роль' },
-    { key: 'createdAt', label: 'Дата создания' }
-  ];
+  // Получение вложенных значений
+  const getNestedValue = (obj: any, path: string): any => {
+    return path.split('.').reduce((current, key) => current?.[key], obj);
+  };
+
+  // Видимые колонки
+  const visibleColumns = useMemo(() => {
+    return columns.filter((col) => columnVisibility[String(col.key)] !== false);
+  }, [columns, columnVisibility]);
+
+  if (loading) {
+    return (
+      <div className='rounded-lg bg-white p-4 shadow'>
+        <div className='flex items-center justify-center py-8'>
+          <div className='h-8 w-8 animate-spin rounded-full border-b-2 border-blue-600'></div>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className='rounded-lg bg-white p-4 shadow'>
-      {/* Поиск */}
-      <div className='mb-4 flex items-center justify-between'>
-        <input
-          type='text'
-          placeholder='Поиск по таблице...'
-          value={searchTerm}
-          onChange={handleSearchChange}
-          className='w-full max-w-md rounded-md border border-gray-300 px-4 py-2 focus:ring-2 focus:ring-blue-500 focus:outline-none'
-        />
-        <select
-          value={rowsPerPage}
-          onChange={(e) => {
-            setRowsPerPage(Number(e.target.value));
-            setCurrentPage(1);
-          }}
-          className='ml-4 rounded-md border border-gray-300 px-3 py-2 focus:ring-2 focus:ring-blue-500 focus:outline-none'
-        >
-          {[5, 10, 25, 50].map((size) => (
-            <option key={size} value={size}>
-              {size} / страница
-            </option>
-          ))}
-        </select>
+      {/* Панель управления */}
+      <div className='mb-4 space-y-3'>
+        {/* Поиск и основные кнопки */}
+        <div className='flex flex-wrap items-center justify-between gap-2'>
+          <div className='flex flex-1 gap-2'>
+            {(onSearch || searchFields.length > 0) && (
+              <input
+                type='text'
+                placeholder='Поиск по таблице...'
+                value={onSearch ? searchTerm : internalSearchTerm}
+                onChange={handleSearchChange}
+                className='min-w-64 flex-1 rounded-md border border-gray-300 px-4 py-2 focus:ring-2 focus:ring-blue-500 focus:outline-none'
+              />
+            )}
+
+            {showFilters && (
+              <button
+                onClick={() => setShowFilterPanel(!showFilterPanel)}
+                className='rounded-md border border-gray-300 px-4 py-2 hover:bg-gray-50'
+              >
+                Фильтры{' '}
+                {Object.keys(actualFilters).some((key) => actualFilters[key])
+                  ? `(${Object.keys(actualFilters).filter((key) => actualFilters[key]).length})`
+                  : ''}
+              </button>
+            )}
+
+            <div className='group relative'>
+              <button className='rounded-md border border-gray-300 px-4 py-2 hover:bg-gray-50'>
+                Колонки
+              </button>
+              <div className='absolute right-0 z-10 mt-1 hidden w-64 rounded-md border border-gray-200 bg-white shadow-lg group-hover:block'>
+                <div className='max-h-64 overflow-y-auto p-2'>
+                  {columns.map((col) => (
+                    <label
+                      key={String(col.key)}
+                      className='flex items-center gap-2 py-1'
+                    >
+                      <input
+                        type='checkbox'
+                        checked={columnVisibility[String(col.key)] !== false}
+                        onChange={() => toggleColumnVisibility(String(col.key))}
+                        className='rounded'
+                      />
+                      <span className='text-sm'>{col.label}</span>
+                    </label>
+                  ))}
+                </div>
+              </div>
+            </div>
+
+            {(Object.keys(actualFilters).some((key) => actualFilters[key]) ||
+              (onSearch ? searchTerm : internalSearchTerm)) && (
+              <button
+                onClick={clearFilters}
+                className='rounded-md border border-red-300 px-4 py-2 text-red-600 hover:bg-red-50'
+              >
+                Сбросить
+              </button>
+            )}
+          </div>
+
+          <select
+            value={actualRowsPerPage}
+            onChange={(e) => handleRowsPerPageChange(Number(e.target.value))}
+            className='rounded-md border border-gray-300 px-3 py-2 focus:ring-2 focus:ring-blue-500 focus:outline-none'
+          >
+            {[5, 10, 25, 50].map((size) => (
+              <option key={size} value={size}>
+                {size} / страница
+              </option>
+            ))}
+          </select>
+        </div>
+
+        {/* Панель фильтров */}
+        {showFilterPanel && showFilters && (
+          <div className='rounded-md border border-gray-200 bg-gray-50 p-4'>
+            <div className='grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4'>
+              {columns
+                .filter((col) => col.filterable)
+                .map((col) => (
+                  <div key={String(col.key)} className='space-y-1'>
+                    <label className='block text-sm font-medium text-gray-700'>
+                      {col.label}
+                    </label>
+
+                    {col.filterType === 'range' ? (
+                      <div className='flex gap-1'>
+                        <input
+                          type='number'
+                          value={actualFilters[`${String(col.key)}-from`] || ''}
+                          onChange={(e) =>
+                            handleFilterChange(
+                              `${String(col.key)}-from`,
+                              e.target.value
+                            )
+                          }
+                          placeholder='От'
+                          className='w-full rounded-md border border-gray-300 px-2 py-1 text-sm focus:ring-2 focus:ring-blue-500 focus:outline-none'
+                        />
+                        <span className='self-center'>-</span>
+                        <input
+                          type='number'
+                          value={actualFilters[`${String(col.key)}-to`] || ''}
+                          onChange={(e) =>
+                            handleFilterChange(
+                              `${String(col.key)}-to`,
+                              e.target.value
+                            )
+                          }
+                          placeholder='До'
+                          className='w-full rounded-md border border-gray-300 px-2 py-1 text-sm focus:ring-2 focus:ring-blue-500 focus:outline-none'
+                        />
+                      </div>
+                    ) : col.filterType === 'select' ||
+                      col.filterType === 'multiselect' ? (
+                      <select
+                        value={
+                          actualFilters[String(col.key)] ||
+                          (col.filterType === 'multiselect' ? [] : '')
+                        }
+                        onChange={(e) => {
+                          if (col.filterType === 'multiselect') {
+                            // Для множественного выбора
+                            const selected = Array.from(
+                              e.target.selectedOptions
+                            ).map((option) => option.value);
+                            handleFilterChange(String(col.key), selected);
+                          } else {
+                            // Для одиночного выбора
+                            handleFilterChange(String(col.key), e.target.value);
+                          }
+                        }}
+                        className='w-full rounded-md border border-gray-300 px-3 py-2 focus:ring-2 focus:ring-blue-500 focus:outline-none'
+                        multiple={col.filterType === 'multiselect'}
+                      >
+                        <option value=''>Все</option>
+                        {col.filterOptions?.map((option) => (
+                          <option key={option.value} value={option.value}>
+                            {option.label}
+                          </option>
+                        ))}
+                      </select>
+                    ) : (
+                      <input
+                        type='text'
+                        value={actualFilters[String(col.key)] || ''}
+                        onChange={(e) =>
+                          handleFilterChange(String(col.key), e.target.value)
+                        }
+                        placeholder={`Фильтр по ${col.label.toLowerCase()}`}
+                        className='w-full rounded-md border border-gray-300 px-3 py-2 focus:ring-2 focus:ring-blue-500 focus:outline-none'
+                      />
+                    )}
+                  </div>
+                ))}
+            </div>
+          </div>
+        )}
       </div>
 
       {/* Таблица */}
@@ -177,17 +407,24 @@ export default function DataTable({
         <table className='min-w-full rounded-lg border border-gray-200 bg-white'>
           <thead>
             <tr className='bg-gray-50'>
-              {headers.map((header) => (
+              {visibleColumns.map((column) => (
                 <th
-                  key={header.key}
-                  onClick={() => handleSort(header.key)}
-                  className='cursor-pointer px-4 py-3 text-left text-xs font-medium tracking-wider text-gray-700 uppercase transition hover:bg-gray-100'
+                  key={String(column.key)}
+                  onClick={() =>
+                    column.sortable && onSort && handleSort(column.key)
+                  }
+                  className={`px-4 py-3 text-left text-xs font-medium tracking-wider text-gray-700 uppercase ${
+                    column.sortable && onSort
+                      ? 'cursor-pointer transition hover:bg-gray-100'
+                      : ''
+                  }`}
+                  style={{ width: column.width }}
                 >
                   <div className='flex items-center'>
-                    {header.label}
-                    {sortConfig?.key === header.key && (
+                    {column.label}
+                    {sortConfig?.key === column.key && onSort && (
                       <span className='ml-1'>
-                        {sortConfig.direction === 'ascending' ? '↑' : '↓'}
+                        {sortConfig.direction === 'ASC' ? '↑' : '↓'}
                       </span>
                     )}
                   </div>
@@ -197,29 +434,36 @@ export default function DataTable({
           </thead>
           <tbody className='divide-y divide-gray-200'>
             {paginatedData.length > 0 ? (
-              paginatedData.map((row) => (
-                <tr key={row.id} className='transition hover:bg-gray-50'>
-                  <td className='px-4 py-3 text-sm text-gray-900'>
-                    {row.name}
-                  </td>
-                  <td className='px-4 py-3 text-sm text-gray-900'>
-                    {row.email}
-                  </td>
-                  <td className='px-4 py-3 text-sm text-gray-900'>
-                    {row.role}
-                  </td>
-                  <td className='px-4 py-3 text-sm text-gray-900'>
-                    {row.createdAt}
-                  </td>
+              paginatedData.map((row, index) => (
+                <tr
+                  key={row.id ?? index}
+                  className='transition hover:bg-gray-50'
+                >
+                  {visibleColumns.map((column) => (
+                    <td
+                      key={String(column.key)}
+                      className='px-4 py-3 text-sm text-gray-900'
+                      style={{ width: column.width }}
+                    >
+                      {column.render
+                        ? column.render(
+                            getNestedValue(row, column.key as string),
+                            row
+                          )
+                        : String(
+                            getNestedValue(row, column.key as string) ?? ''
+                          )}
+                    </td>
+                  ))}
                 </tr>
               ))
             ) : (
               <tr>
                 <td
-                  colSpan={headers.length}
+                  colSpan={visibleColumns.length}
                   className='px-4 py-6 text-center text-gray-500'
                 >
-                  Нет данных
+                  {emptyMessage}
                 </td>
               </tr>
             )}
@@ -230,21 +474,21 @@ export default function DataTable({
       {/* Пагинация */}
       <div className='mt-4 flex items-center justify-between'>
         <p className='text-sm text-gray-700'>
-          Страница {currentPage} из {totalPages || 1}
+          Показано {(actualCurrentPage - 1) * actualRowsPerPage + 1} -{' '}
+          {Math.min(actualCurrentPage * actualRowsPerPage, actualTotalCount)} из{' '}
+          {actualTotalCount}
         </p>
         <div className='flex space-x-2'>
           <button
-            onClick={() => setCurrentPage((prev) => Math.max(prev - 1, 1))}
-            disabled={currentPage === 1}
+            onClick={() => handlePageChange(actualCurrentPage - 1)}
+            disabled={actualCurrentPage === 1}
             className='rounded border border-gray-300 px-3 py-1 hover:bg-gray-100 disabled:cursor-not-allowed disabled:opacity-50'
           >
             Назад
           </button>
           <button
-            onClick={() =>
-              setCurrentPage((prev) => Math.min(prev + 1, totalPages))
-            }
-            disabled={currentPage === totalPages || totalPages === 0}
+            onClick={() => handlePageChange(actualCurrentPage + 1)}
+            disabled={actualCurrentPage === totalPages || totalPages === 0}
             className='rounded border border-gray-300 px-3 py-1 hover:bg-gray-100 disabled:cursor-not-allowed disabled:opacity-50'
           >
             Вперед

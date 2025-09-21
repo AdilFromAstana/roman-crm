@@ -1,7 +1,8 @@
 'use client';
-import { useTheme } from 'next-themes';
-import React from 'react';
+import React, { useState } from 'react';
 import { ActiveThemeProvider } from '../active-theme';
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
+import { ReactQueryDevtools } from '@tanstack/react-query-devtools';
 
 export default function Providers({
   activeThemeValue,
@@ -10,12 +11,24 @@ export default function Providers({
   activeThemeValue: string;
   children: React.ReactNode;
 }) {
-  // resolvedTheme можно использовать для вашей логики темизации
-  const { resolvedTheme } = useTheme();
+  const [queryClient] = useState(
+    () =>
+      new QueryClient({
+        defaultOptions: {
+          queries: {
+            staleTime: 60 * 1000, // 1 минута
+            retry: 1
+          }
+        }
+      })
+  );
 
   return (
     <ActiveThemeProvider initialTheme={activeThemeValue}>
-      {children}
+      <QueryClientProvider client={queryClient}>
+        {children}
+        <ReactQueryDevtools initialIsOpen={false} />
+      </QueryClientProvider>
     </ActiveThemeProvider>
   );
 }

@@ -33,23 +33,8 @@ import {
   DialogTitle,
   DialogTrigger
 } from '@/components/ui/dialog';
-import { Badge } from '@/components/ui/badge';
-import { format } from 'date-fns';
-import { ru } from 'date-fns/locale';
 import { fakeBringCar } from '@/constants/fakeBringCar';
 import { BringCar } from '@/types';
-import {
-  ColumnDef,
-  ColumnFiltersState,
-  SortingState,
-  VisibilityState,
-  flexRender,
-  getCoreRowModel,
-  getFilteredRowModel,
-  getPaginationRowModel,
-  getSortedRowModel,
-  useReactTable
-} from '@tanstack/react-table';
 import {
   Table,
   TableBody,
@@ -73,10 +58,10 @@ export default function NewSaleCarPage() {
   const [isLoading, setIsLoading] = useState(true);
 
   // Таблица состояний
-  const [sorting, setSorting] = useState<SortingState>([]);
-  const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
-  const [columnVisibility, setColumnVisibility] = useState<VisibilityState>({});
-  const [rowSelection, setRowSelection] = useState({});
+  const [sorting, setSorting] = useState<any[]>([]);
+  const [columnFilters, setColumnFilters] = useState<any[]>([]);
+  const [columnVisibility, setColumnVisibility] = useState<any>({});
+  const [rowSelection, setRowSelection] = useState<any>({});
 
   // Загружаем автомобили при монтировании
   useEffect(() => {
@@ -112,26 +97,6 @@ export default function NewSaleCarPage() {
     };
     return transmissions[transmission] || transmission;
   };
-
-  // Создание таблицы
-  const table = useReactTable({
-    data: cars,
-    columns: bringCarColumns,
-    onSortingChange: setSorting,
-    onColumnFiltersChange: setColumnFilters,
-    getCoreRowModel: getCoreRowModel(),
-    getPaginationRowModel: getPaginationRowModel(),
-    getSortedRowModel: getSortedRowModel(),
-    getFilteredRowModel: getFilteredRowModel(),
-    onColumnVisibilityChange: setColumnVisibility,
-    onRowSelectionChange: setRowSelection,
-    state: {
-      sorting,
-      columnFilters,
-      columnVisibility,
-      rowSelection
-    }
-  });
 
   const handleSelectCar = (car: BringCar) => {
     const formattedLabel = `${car.brand} ${car.model} ${car.year}, ${car.mileage.toLocaleString('ru-RU')} км`;

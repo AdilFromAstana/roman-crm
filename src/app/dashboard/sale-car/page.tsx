@@ -3,41 +3,17 @@ import PageContainer from '@/components/layout/page-container';
 import { buttonVariants } from '@/components/ui/button';
 import { Heading } from '@/components/ui/heading';
 import { Separator } from '@/components/ui/separator';
-import { UniversalTable } from '@/features/products/components/product-tables/UniversalTable';
-import { searchParamsCache } from '@/lib/searchparams';
 import { cn } from '@/lib/utils';
 import { IconPlus } from '@tabler/icons-react';
 import Link from 'next/link';
 import { Suspense } from 'react';
 import { TABLE_CONFIG } from '@/constants/table-config';
 import { DataTableSkeleton } from '@/components/ui/table/data-table-skeleton';
+import DataTable from '@/components/customTable';
 
-export const metadata = {
-  title: 'Продажа авто - Dashboard'
-};
-
-interface PageProps {
-  searchParams: Promise<{ [key: string]: string | string[] | undefined }>;
-}
-
-export default async function SaleCarPage({ searchParams }: PageProps) {
-  const searchParamsData = await searchParams;
-  searchParamsCache.parse(searchParamsData);
-
-  const page = searchParamsCache.get('page');
-  const search = searchParamsCache.get('name');
-  const pageLimit = searchParamsCache.get('perPage');
-  const categories = searchParamsCache.get('category');
-
-  const filters = {
-    page,
-    limit: pageLimit,
-    ...(search && { search }),
-    ...(categories && { categories: categories })
-  };
-
+export default function SaleCarPage() {
   const config = TABLE_CONFIG.soldCar;
-  const data = await config.dataSource.getProducts(filters);
+  const data = config.dataSource.getProducts({});
 
   return (
     <PageContainer scrollable={false}>
@@ -57,13 +33,7 @@ export default async function SaleCarPage({ searchParams }: PageProps) {
             <DataTableSkeleton columnCount={5} rowCount={8} filterCount={2} />
           }
         >
-          <UniversalTable
-            data={data.products}
-            totalItems={data.total_products}
-            columns={config.columns}
-            tableType='soldCar'
-            basePath='/dashboard/sale-car'
-          />
+          <DataTable />
         </Suspense>
       </div>
     </PageContainer>

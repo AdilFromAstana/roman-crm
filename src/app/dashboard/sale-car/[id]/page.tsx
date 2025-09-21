@@ -101,7 +101,7 @@ export default async function SaleCarDetailPage({ params }: DetailPageProps) {
                   </h3>
                   <p className='text-lg'>
                     {car.price.toLocaleString('ru-RU')} ₸
-                  </p>
+                  </p>  
                 </div>
                 <div>
                   <h3 className='text-muted-foreground text-sm font-medium'>
