@@ -1,7 +1,15 @@
 // components/ui/advanced-data-table.tsx
 'use client';
 
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue
+} from '@radix-ui/react-select';
 import { useState, useMemo } from 'react';
+import { MultiSelect } from './ui/multi-select';
 
 type FilterType =
   | 'text'
@@ -355,35 +363,40 @@ export default function AdvancedDataTable<T extends { id?: any }>({
                           className='w-full rounded-md border border-gray-300 px-2 py-1 text-sm focus:ring-2 focus:ring-blue-500 focus:outline-none'
                         />
                       </div>
-                    ) : col.filterType === 'select' ||
-                      col.filterType === 'multiselect' ? (
-                      <select
-                        value={
-                          actualFilters[String(col.key)] ||
-                          (col.filterType === 'multiselect' ? [] : '')
+                    ) : col.filterType === 'select' ? (
+                      <Select
+                        value={actualFilters[String(col.key)] || ''}
+                        onValueChange={(value) =>
+                          handleFilterChange(String(col.key), value)
                         }
-                        onChange={(e) => {
-                          if (col.filterType === 'multiselect') {
-                            // Для множественного выбора
-                            const selected = Array.from(
-                              e.target.selectedOptions
-                            ).map((option) => option.value);
-                            handleFilterChange(String(col.key), selected);
-                          } else {
-                            // Для одиночного выбора
-                            handleFilterChange(String(col.key), e.target.value);
-                          }
-                        }}
-                        className='w-full rounded-md border border-gray-300 px-3 py-2 focus:ring-2 focus:ring-blue-500 focus:outline-none'
-                        multiple={col.filterType === 'multiselect'}
                       >
-                        <option value=''>Все</option>
-                        {col.filterOptions?.map((option) => (
-                          <option key={option.value} value={option.value}>
-                            {option.label}
-                          </option>
-                        ))}
-                      </select>
+                        <SelectTrigger className='w-full'>
+                          <SelectValue
+                            placeholder={`Выберите ${col.label.toLowerCase()}`}
+                          />
+                        </SelectTrigger>
+                        <SelectContent>
+                          <SelectItem value='__all__'>Все</SelectItem>
+                          {col.filterOptions?.map((option) => (
+                            <SelectItem key={option.value} value={option.value}>
+                              {option.label}
+                            </SelectItem>
+                          ))}
+                        </SelectContent>
+                      </Select>
+                    ) : col.filterType === 'multiselect' ? (
+                      <MultiSelect
+                        options={col.filterOptions || []}
+                        value={
+                          Array.isArray(actualFilters[String(col.key)])
+                            ? actualFilters[String(col.key)]
+                            : []
+                        }
+                        onChange={(value) =>
+                          handleFilterChange(String(col.key), value)
+                        }
+                        placeholder={`Выберите ${col.label.toLowerCase()}`}
+                      />
                     ) : (
                       <input
                         type='text'
