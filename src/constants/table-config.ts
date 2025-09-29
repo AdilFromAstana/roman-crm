@@ -1,13 +1,5 @@
 // constants/table-config.ts
 import { TableType } from '@/types';
-import { fakeBringCar } from './fakeBringCar';
-import { fakeSoldCar } from './fakeSoldCar';
-// import { fakeMarketing } from './fakeMarketing';
-// import { fakeTarget } from './fakeTarget';
-import { bringCarColumns } from '@/features/products/components/product-tables/bringColumns';
-import { soldCarColumns } from '@/features/products/components/product-tables/salesColumns';
-import { clientColumns } from '@/features/products/components/product-tables/clientsColumns';
-import { fakeClients } from './fakeClients';
 
 export const TABLE_CONFIG: Record<
   TableType,
@@ -25,22 +17,22 @@ export const TABLE_CONFIG: Record<
   //     description: 'Manage client requests'
   //   },
   bringCar: {
-    columns: bringCarColumns,
-    dataSource: fakeBringCar,
+    columns: [],
+    dataSource: {},
     title: 'Загон машин',
     description: 'Управление загнаными машина'
   },
   soldCar: {
-    columns: soldCarColumns,
-    dataSource: fakeSoldCar,
+    columns: [],
+    dataSource: {},
     title: 'Проданные машины',
     description: 'Управление продаными машинами'
   },
   clients: {
     title: 'Клиенты',
     description: 'Управление клиентами',
-    columns: clientColumns,
-    dataSource: fakeClients
+    columns: [],
+    dataSource: {}
   }
   //   marketing: {
   //     columns: marketingColumns,

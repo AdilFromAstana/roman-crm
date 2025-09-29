@@ -34,7 +34,7 @@ export const getSortingStateParser = <TData>(
           return null;
         }
 
-        return result.data as ExtendedColumnSort<TData>[];
+        return result.data as ExtendedColumnSort<any>[];
       } catch {
         return null;
       }
