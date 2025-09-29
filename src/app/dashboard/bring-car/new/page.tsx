@@ -18,8 +18,10 @@ import {
 } from '@/components/ui/select';
 import { Checkbox } from '@/components/ui/checkbox';
 import { Separator } from '@/components/ui/separator';
-import { BRANDS, EMPLOYEES, FEATURES, MODELS_BY_BRAND } from '@/constants/data';
-import { useState, useRef } from 'react';
+// import { BRANDS, EMPLOYEES, FEATURES, MODELS_BY_BRAND } from '@/constants/data';
+import { useState, useRef, useEffect } from 'react';
+import axios from 'axios';
+import { useRouter } from 'next/navigation';
 
 interface ImageWithPreview {
   file: File;
@@ -27,11 +29,35 @@ interface ImageWithPreview {
 }
 
 export default function NewBringCarPage() {
-  const [selectedBrand, setSelectedBrand] = useState<string>('');
+  const [brands, setBrands] = useState<any[]>([]);
+  const [models, setModels] = useState<any[]>([]);
+  const [colors, setColors] = useState<any[]>([]);
+  const [fuelTypes, setFuelTypes] = useState<any[]>([]);
+  const [transmissions, setTransmissions] = useState<any[]>([]);
+  const [employees, setEmployees] = useState<any[]>([]);
+  const [features, setFeatures] = useState<any[]>([]);
+
+  const router = useRouter();
   const [images, setImages] = useState<ImageWithPreview[]>([]);
   const fileInputRef = useRef<HTMLInputElement>(null);
   const [dragActive, setDragActive] = useState(false);
   const [draggedItem, setDraggedItem] = useState<number | null>(null);
+  const [loading, setLoading] = useState(false);
+
+  const [price, setPrice] = useState<number>(0);
+  const [year, setYear] = useState<number>(0);
+  const [selectedColor, setSelectedColor] = useState<string>('');
+  const [selectedBrand, setSelectedBrand] = useState<string>('');
+  const [selectedModel, setSelectedModel] = useState<string>('');
+  const [selectedEmployee, setSelectedEmployee] = useState<string>('');
+
+  const [salePrice, setSalePrice] = useState<number>(0);
+  const [mileage, setMileage] = useState<number>(0);
+  const [colorCode, setColorCode] = useState<string>('');
+  const [fuelTypeCode, setFuelTypeCode] = useState<string>('');
+  const [transmissionCode, setTransmissionCode] = useState<string>('');
+  const [description, setDescription] = useState<string>('');
+  const [createdAt, setCreatedAt] = useState<string>('');
 
   const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const files = e.target.files;
@@ -58,7 +84,6 @@ export default function NewBringCarPage() {
     fileInputRef.current?.click();
   };
 
-  // Drag & Drop handlers
   const handleDrag = (e: React.DragEvent) => {
     e.preventDefault();
     e.stopPropagation();
@@ -114,6 +139,98 @@ export default function NewBringCarPage() {
     setDraggedItem(null);
   };
 
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setLoading(true);
+
+    try {
+      // ⚡️ В реальном проекте нужно загружать файлы на сервер/облако.
+      // Пока возьмём preview как imageUrl (моки).
+      const imageUrls = images.map((img) => img.preview);
+
+      const dto = {
+        brandCode: selectedBrand,
+        modelCode: selectedModel,
+        year: year ? Number(year) : null,
+        price: price ? Number(price) : null,
+        salePrice: salePrice ? Number(salePrice) : null,
+        mileage: mileage ? Number(mileage) : null,
+        colorCode,
+        fuelTypeCode,
+        transmissionCode,
+        featureCodes: features.map((f) => f.code),
+        description,
+        bringEmployeeId: selectedEmployee,
+        createdAt,
+        imageUrls,
+        isActive: true
+      };
+
+      await axios.post('http://localhost:3001/bring-cars', dto); // прокси на твой NestJS (или прям URL)
+
+      router.push('/dashboard/bring-car');
+    } catch (err) {
+      console.error('Ошибка при создании авто', err);
+      alert('Ошибка при добавлении автомобиля');
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    async function fetchData() {
+      try {
+        const [
+          brandsRes,
+          colorsRes,
+          fuelTypesRes,
+          transmissionsRes,
+          employeesRes,
+          featuresRes
+        ] = await Promise.all([
+          axios.get('http://localhost:3001/brands'),
+          axios.get('http://localhost:3001/colors'),
+          axios.get('http://localhost:3001/fuel-types'),
+          axios.get('http://localhost:3001/transmissions'),
+          axios.get('http://localhost:3001/employees'),
+          axios.get('http://localhost:3001/features')
+        ]);
+
+        setBrands(brandsRes.data);
+        setColors(colorsRes.data);
+        setFuelTypes(fuelTypesRes.data);
+        setTransmissions(transmissionsRes.data);
+        setEmployees(employeesRes.data);
+        setFeatures(featuresRes.data);
+      } catch (err) {
+        console.error('Ошибка загрузки справочников', err);
+      }
+    }
+
+    fetchData();
+  }, []);
+
+  // Загружаем модели только после выбора бренда
+  useEffect(() => {
+    async function fetchModels() {
+      if (!selectedBrand) {
+        setModels([]);
+        return;
+      }
+      const needBrandId = brands.find((b) => b.code === selectedBrand)?.id;
+      try {
+        const res = await axios.get(
+          `http://localhost:3001/models?brandId=${needBrandId}`
+        );
+        setModels(res.data);
+      } catch (err) {
+        console.error('Ошибка загрузки моделей', err);
+      }
+    }
+
+    fetchModels();
+  }, [selectedBrand]);
+
   return (
     <PageContainer>
       <div className='w-full space-y-6'>
@@ -128,7 +245,7 @@ export default function NewBringCarPage() {
 
         <Separator />
 
-        <form className='space-y-6'>
+        <form className='space-y-6' onSubmit={handleSubmit}>
           {/* Основная информация об авто */}
           <Card>
             <CardHeader>
@@ -137,15 +254,18 @@ export default function NewBringCarPage() {
             <CardContent className='space-y-4'>
               <div className='grid grid-cols-1 gap-4 md:grid-cols-2'>
                 <div className='space-y-2'>
-                  <Label htmlFor='brand'>Марка *</Label>
-                  <Select onValueChange={setSelectedBrand}>
+                  <Label>Марка *</Label>
+                  <Select
+                    onValueChange={setSelectedBrand}
+                    value={selectedBrand}
+                  >
                     <SelectTrigger>
                       <SelectValue placeholder='Выберите марку' />
                     </SelectTrigger>
                     <SelectContent>
-                      {BRANDS.map((brand) => (
-                        <SelectItem key={brand.value} value={brand.value}>
-                          {brand.label}
+                      {brands.map((brand) => (
+                        <SelectItem key={brand.code} value={brand.code}>
+                          {brand.name}
                         </SelectItem>
                       ))}
                     </SelectContent>
@@ -153,8 +273,12 @@ export default function NewBringCarPage() {
                 </div>
 
                 <div className='space-y-2'>
-                  <Label htmlFor='model'>Модель *</Label>
-                  <Select disabled={!selectedBrand}>
+                  <Label>Модель *</Label>
+                  <Select
+                    disabled={!selectedBrand}
+                    value={selectedModel}
+                    onValueChange={setSelectedModel}
+                  >
                     <SelectTrigger>
                       <SelectValue
                         placeholder={
@@ -165,78 +289,109 @@ export default function NewBringCarPage() {
                       />
                     </SelectTrigger>
                     <SelectContent>
-                      {selectedBrand &&
-                        MODELS_BY_BRAND[selectedBrand]?.map((model) => (
-                          <SelectItem key={model.value} value={model.value}>
-                            {model.label}
-                          </SelectItem>
-                        ))}
+                      {models.map((model) => (
+                        <SelectItem key={model.code} value={model.code}>
+                          {model.name}
+                        </SelectItem>
+                      ))}
                     </SelectContent>
                   </Select>
                 </div>
 
                 <div className='space-y-2'>
-                  <Label htmlFor='year'>Год *</Label>
+                  <Label>Цена продажи (₸)</Label>
                   <Input
-                    id='year'
                     type='number'
-                    min='1900'
-                    max={new Date().getFullYear()}
-                    placeholder='2020'
+                    min='0'
+                    placeholder='6000000'
+                    value={salePrice}
+                    onChange={(e) => setSalePrice(Number(e.target.value))}
                   />
                 </div>
 
                 <div className='space-y-2'>
-                  <Label htmlFor='price'>Цена (₸) *</Label>
+                  <Label>Цена загона(₸) *</Label>
                   <Input
-                    id='price'
                     type='number'
                     min='0'
                     placeholder='5000000'
+                    value={price}
+                    onChange={(e) => setPrice(Number(e.target.value))}
                   />
                 </div>
 
                 <div className='space-y-2'>
-                  <Label htmlFor='mileage'>Пробег (км) *</Label>
+                  <Label>Пробег (км) *</Label>
                   <Input
-                    id='mileage'
                     type='number'
                     min='0'
                     placeholder='50000'
+                    value={mileage ?? 0}
+                    onChange={(e) => setMileage(Number(e.target.value))}
                   />
                 </div>
 
                 <div className='space-y-2'>
-                  <Label htmlFor='color'>Цвет *</Label>
-                  <Input id='color' placeholder='Белый' />
+                  <Label>Цвет *</Label>
+                  <Select value={colorCode} onValueChange={setColorCode}>
+                    <SelectTrigger>
+                      <SelectValue placeholder='Выберите цвет' />
+                    </SelectTrigger>
+                    <SelectContent>
+                      {colors.map((color) => (
+                        <SelectItem key={color.code} value={color.code}>
+                          {color.name}
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
                 </div>
 
                 <div className='space-y-2'>
-                  <Label htmlFor='fuelType'>Тип топлива *</Label>
-                  <Select>
+                  <Label>Тип топлива *</Label>
+                  <Select value={fuelTypeCode} onValueChange={setFuelTypeCode}>
                     <SelectTrigger>
                       <SelectValue placeholder='Выберите тип топлива' />
                     </SelectTrigger>
                     <SelectContent>
-                      <SelectItem value='petrol'>Бензин</SelectItem>
-                      <SelectItem value='diesel'>Дизель</SelectItem>
-                      <SelectItem value='electric'>Электро</SelectItem>
-                      <SelectItem value='hybrid'>Гибрид</SelectItem>
+                      {fuelTypes.map((fuel) => (
+                        <SelectItem key={fuel.code} value={fuel.code}>
+                          {fuel.name}
+                        </SelectItem>
+                      ))}
                     </SelectContent>
                   </Select>
                 </div>
 
                 <div className='space-y-2'>
-                  <Label htmlFor='transmission'>Коробка передач *</Label>
-                  <Select>
+                  <Label>Коробка передач *</Label>
+                  <Select
+                    value={transmissionCode}
+                    onValueChange={setTransmissionCode}
+                  >
                     <SelectTrigger>
                       <SelectValue placeholder='Выберите коробку' />
                     </SelectTrigger>
                     <SelectContent>
-                      <SelectItem value='manual'>Механика</SelectItem>
-                      <SelectItem value='automatic'>Автомат</SelectItem>
+                      {transmissions.map((tr) => (
+                        <SelectItem key={tr.code} value={tr.code}>
+                          {tr.name}
+                        </SelectItem>
+                      ))}
                     </SelectContent>
                   </Select>
+                </div>
+
+                <div className='space-y-2'>
+                  <Label>Год *</Label>
+                  <Input
+                    type='number'
+                    min='1900'
+                    max={new Date().getFullYear()}
+                    placeholder='2020'
+                    value={year}
+                    onChange={(e) => setYear(Number(e.target.value))}
+                  />
                 </div>
               </div>
             </CardContent>
@@ -337,14 +492,14 @@ export default function NewBringCarPage() {
               <div className='grid grid-cols-1 gap-4 md:grid-cols-2'>
                 <div className='space-y-2'>
                   <Label htmlFor='bringEmployeeId'>Загнал авто *</Label>
-                  <Select>
+                  <Select onValueChange={setSelectedEmployee}>
                     <SelectTrigger>
                       <SelectValue placeholder='Выберите сотрудника' />
                     </SelectTrigger>
                     <SelectContent>
-                      {EMPLOYEES.map((employee) => (
-                        <SelectItem key={employee.value} value={employee.value}>
-                          {employee.label}
+                      {employees.map((employee) => (
+                        <SelectItem key={employee.id} value={employee.id}>
+                          {employee.firstName} {employee.lastName}
                         </SelectItem>
                       ))}
                     </SelectContent>
@@ -366,14 +521,14 @@ export default function NewBringCarPage() {
             </CardHeader>
             <CardContent>
               <div className='grid grid-cols-2 gap-4 sm:grid-cols-3 md:grid-cols-4'>
-                {FEATURES.map((feature) => (
+                {features.map((feature) => (
                   <div key={feature} className='flex items-center space-x-2'>
                     <Checkbox id={`feature-${feature}`} />
                     <label
                       htmlFor={`feature-${feature}`}
                       className='text-sm leading-none font-medium peer-disabled:cursor-not-allowed peer-disabled:opacity-70'
                     >
-                      {feature}
+                      {feature.name}
                     </label>
                   </div>
                 ))}

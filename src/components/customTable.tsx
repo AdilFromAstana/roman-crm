@@ -76,8 +76,7 @@ export default function AdvancedDataTable<T extends { id?: any }>({
   searchTerm = '',
   loading = false,
   emptyMessage = 'Нет данных',
-  showFilters = true,
-  showColumnVisibility = true
+  showFilters = true
 }: DataTableProps<T>) {
   const [internalSearchTerm, setInternalSearchTerm] = useState(searchTerm);
   const [internalRowsPerPage, setInternalRowsPerPage] = useState(rowsPerPage);
@@ -416,28 +415,28 @@ export default function AdvancedDataTable<T extends { id?: any }>({
       </div>
 
       {/* Таблица */}
-      <div className='overflow-x-auto'>
-        <table className='min-w-full rounded-lg border border-gray-200 bg-white'>
-          <thead>
-            <tr className='bg-gray-50'>
+      <div className='overflow-x-auto rounded-lg border border-gray-200 bg-white shadow-sm'>
+        <table className='min-w-full divide-y divide-gray-200'>
+          <thead className='sticky top-0 z-10 bg-gray-100'>
+            <tr>
               {visibleColumns.map((column) => (
                 <th
                   key={String(column.key)}
                   onClick={() =>
                     column.sortable && onSort && handleSort(column.key)
                   }
-                  className={`px-4 py-3 text-left text-xs font-medium tracking-wider text-gray-700 uppercase ${
+                  className={`px-5 py-3 text-left text-sm font-semibold tracking-wider text-gray-700 uppercase ${
                     column.sortable && onSort
-                      ? 'cursor-pointer transition hover:bg-gray-100'
+                      ? 'cursor-pointer select-none hover:bg-gray-200'
                       : ''
                   }`}
                   style={{ width: column.width }}
                 >
-                  <div className='flex items-center'>
+                  <div className='flex items-center gap-1'>
                     {column.label}
                     {sortConfig?.key === column.key && onSort && (
-                      <span className='ml-1'>
-                        {sortConfig.direction === 'ASC' ? '↑' : '↓'}
+                      <span className='text-xs'>
+                        {sortConfig.direction === 'ASC' ? '▲' : '▼'}
                       </span>
                     )}
                   </div>
@@ -445,17 +444,19 @@ export default function AdvancedDataTable<T extends { id?: any }>({
               ))}
             </tr>
           </thead>
-          <tbody className='divide-y divide-gray-200'>
+          <tbody className='divide-y divide-gray-100 bg-white'>
             {paginatedData.length > 0 ? (
               paginatedData.map((row, index) => (
                 <tr
                   key={row.id ?? index}
-                  className='transition hover:bg-gray-50'
+                  className={`transition ${
+                    index % 2 === 0 ? 'bg-white' : 'bg-gray-50'
+                  } hover:bg-blue-50`}
                 >
                   {visibleColumns.map((column) => (
                     <td
                       key={String(column.key)}
-                      className='px-4 py-3 text-sm text-gray-900'
+                      className='px-5 py-3 text-sm text-gray-800'
                       style={{ width: column.width }}
                     >
                       {column.render
@@ -474,7 +475,7 @@ export default function AdvancedDataTable<T extends { id?: any }>({
               <tr>
                 <td
                   colSpan={visibleColumns.length}
-                  className='px-4 py-6 text-center text-gray-500'
+                  className='px-5 py-8 text-center text-sm text-gray-500'
                 >
                   {emptyMessage}
                 </td>
@@ -485,24 +486,27 @@ export default function AdvancedDataTable<T extends { id?: any }>({
       </div>
 
       {/* Пагинация */}
-      <div className='mt-4 flex items-center justify-between'>
-        <p className='text-sm text-gray-700'>
-          Показано {(actualCurrentPage - 1) * actualRowsPerPage + 1} -{' '}
+      <div className='mt-4 flex items-center justify-between border-t border-gray-200 pt-4'>
+        <p className='text-sm text-gray-600'>
+          Показано {(actualCurrentPage - 1) * actualRowsPerPage + 1} –{' '}
           {Math.min(actualCurrentPage * actualRowsPerPage, actualTotalCount)} из{' '}
           {actualTotalCount}
         </p>
-        <div className='flex space-x-2'>
+        <div className='flex items-center gap-2'>
           <button
             onClick={() => handlePageChange(actualCurrentPage - 1)}
             disabled={actualCurrentPage === 1}
-            className='rounded border border-gray-300 px-3 py-1 hover:bg-gray-100 disabled:cursor-not-allowed disabled:opacity-50'
+            className='rounded-md border border-gray-300 bg-white px-3 py-1 text-sm text-gray-700 hover:bg-gray-100 disabled:opacity-40'
           >
             Назад
           </button>
+          <span className='text-sm font-medium text-gray-700'>
+            {actualCurrentPage} / {totalPages || 1}
+          </span>
           <button
             onClick={() => handlePageChange(actualCurrentPage + 1)}
             disabled={actualCurrentPage === totalPages || totalPages === 0}
-            className='rounded border border-gray-300 px-3 py-1 hover:bg-gray-100 disabled:cursor-not-allowed disabled:opacity-50'
+            className='rounded-md border border-gray-300 bg-white px-3 py-1 text-sm text-gray-700 hover:bg-gray-100 disabled:opacity-40'
           >
             Вперед
           </button>

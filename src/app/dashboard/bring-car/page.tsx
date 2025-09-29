@@ -5,34 +5,18 @@ import { useQuery } from '@tanstack/react-query';
 import api from '@/lib/axios';
 import { useState, useEffect } from 'react';
 import AdvancedDataTable, { type Column } from '@/components/customTable';
-
-interface BringCar {
-  id: string;
-  brandCode: string;
-  brand: { name: string; code: string };
-  modelCode: string;
-  model: { name: string; code: string };
-  year: number;
-  price: number;
-  salePrice: number;
-  mileage: number;
-  colorCode: string;
-  color: { name: string; code: string };
-  fuelTypeCode: string;
-  fuelType: { name: string; code: string };
-  transmissionCode: string;
-  transmission: { name: string; code: string };
-  bringEmployeeId: string;
-  bringEmployee: { firstName: string; lastName: string; id: string };
-  createdAt: string;
-  isActive: boolean;
-}
+import { BringCar } from '@/types';
 
 // Типы для справочников
 interface DictionaryItem {
   code: string;
   name: string;
 }
+
+const formatPrice = (value?: number) => {
+  if (!value) return '-';
+  return new Intl.NumberFormat('ru-RU').format(value) + ' ₸';
+};
 
 export default function BringCarsPage() {
   const [page, setPage] = useState(1);
@@ -164,6 +148,20 @@ export default function BringCarsPage() {
   // Явно типизированные колонки
   const columns: Column<BringCar>[] = [
     {
+      key: 'images',
+      label: 'Фото',
+      render: (value, row) => (
+        <div className='flex items-center gap-2'>
+          <img
+            src={'https://placehold.co/600x400'}
+            alt='car'
+            className='h-14 w-20 rounded-md border object-cover'
+          />
+        </div>
+      ),
+      width: '120px'
+    },
+    {
       key: 'brandCode',
       label: 'Марка',
       sortable: true,
@@ -200,7 +198,7 @@ export default function BringCarsPage() {
       sortable: true,
       filterable: true,
       filterType: 'range' as const,
-      render: (value: number) => (value ? `${value.toLocaleString()} ₽` : '-')
+      render: (value: number) => formatPrice(value)
     },
     {
       key: 'salePrice',
@@ -208,7 +206,7 @@ export default function BringCarsPage() {
       sortable: true,
       filterable: true,
       filterType: 'range' as const,
-      render: (value: number) => (value ? `${value.toLocaleString()} ₽` : '-')
+      render: (value: number) => formatPrice(value)
     },
     {
       key: 'mileage',
