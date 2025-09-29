@@ -4,11 +4,9 @@
 import {
   DropdownMenu,
   DropdownMenuContent,
-  DropdownMenuTrigger,
-  DropdownMenuCheckboxItem
+  DropdownMenuTrigger
 } from '@/components/ui/dropdown-menu';
 import { Button } from '@/components/ui/button';
-import { Table } from '@tanstack/react-table';
 import { Settings2 } from 'lucide-react';
 
 // Резервный маппинг для колонок без meta.label
@@ -42,14 +40,12 @@ const FALLBACK_COLUMN_NAMES: Record<string, string> = {
 };
 
 interface ColumnVisibilityToggleProps<TData> {
-  table: Table<TData>;
   tableType?: string;
 }
 
-export function ColumnVisibilityToggle<TData>({
-  table,
-  tableType
-}: ColumnVisibilityToggleProps<TData>) {
+export function ColumnVisibilityToggle<
+  TData
+>({}: ColumnVisibilityToggleProps<TData>) {
   const getColumnDisplayName = (column: any): string => {
     // Приоритет 1: meta.label
     if (column.columnDef?.meta?.label) {
@@ -77,26 +73,11 @@ export function ColumnVisibilityToggle<TData>({
           <Settings2 className='h-4 w-4' />
         </Button>
       </DropdownMenuTrigger>
-      <DropdownMenuContent align='end' className='w-[250px]' forceMount>
-        {table
-          .getAllColumns()
-          .filter(
-            (column) =>
-              typeof column.accessorFn !== 'undefined' && column.getCanHide()
-          )
-          .map((column) => {
-            return (
-              <DropdownMenuCheckboxItem
-                key={column.id}
-                checked={column.getIsVisible()}
-                onCheckedChange={(value) => column.toggleVisibility(!!value)}
-                onSelect={(event) => event.preventDefault()}
-              >
-                <span className='truncate'>{getColumnDisplayName(column)}</span>
-              </DropdownMenuCheckboxItem>
-            );
-          })}
-      </DropdownMenuContent>
+      <DropdownMenuContent
+        align='end'
+        className='w-[250px]'
+        forceMount
+      ></DropdownMenuContent>
     </DropdownMenu>
   );
 }
