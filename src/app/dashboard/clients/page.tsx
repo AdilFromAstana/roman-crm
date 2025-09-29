@@ -12,11 +12,10 @@ import { ClientModal } from '@/components/clients/client-modal';
 import { TABLE_CONFIG } from '@/constants/table-config';
 import { ClientViewModal } from '@/components/clients/client-view-modal';
 import { Clients } from '@/types';
-import DataTable from '@/components/customTable';
 
 export default function ClientsPage() {
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [client, setClient] = useState<{
+  const [client] = useState<{
     message: string;
     success: boolean;
     time: string;
@@ -34,10 +33,10 @@ export default function ClientsPage() {
     getData();
   }, []);
 
-  const selectClient = async (id: string) => {
-    setClient(await config.dataSource.getProductById(id));
-    setIsModalOpen(true);
-  };
+  // const selectClient = async (id: string) => {
+  //   setClient(await config.dataSource.getProductById(id));
+  //   setIsModalOpen(true);
+  // };
 
   return (
     <PageContainer scrollable={false}>
@@ -60,7 +59,7 @@ export default function ClientsPage() {
             <DataTableSkeleton columnCount={5} rowCount={8} filterCount={2} />
           }
         >
-          <DataTable />
+          {/* <DataTable /> */}
         </Suspense>
       </div>
       <ClientViewModal
