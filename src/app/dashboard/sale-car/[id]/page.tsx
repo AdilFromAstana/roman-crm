@@ -14,6 +14,7 @@ import PaymentDetails from '../components/PaymentDetails';
 import TeamAndBonuses from '../components/TeamAndBonuses';
 import NotesSection from '../components/NotesSection';
 import SaleStatusProgress from '../components/SaleStatusProgress';
+import Link from 'next/link';
 
 export default function EditSaleCarPage() {
   const params = useParams(); // достанет { id }
@@ -107,9 +108,9 @@ export default function EditSaleCarPage() {
       <div className='mx-auto w-full max-w-4xl space-y-6 pb-20'>
         <div className='flex items-center gap-4'>
           <Button variant='outline' size='icon' asChild>
-            <a href='/dashboard/sale-car'>
+            <Link href='/dashboard/sale-car'>
               <ChevronLeft className='h-4 w-4' />
-            </a>
+            </Link>
           </Button>
           <h1 className='text-3xl font-bold'>Редактировать продажу</h1>
         </div>
@@ -159,7 +160,7 @@ export default function EditSaleCarPage() {
 
           <div className='flex justify-end gap-3 border-t pt-6'>
             <Button variant='outline' asChild>
-              <a href='/dashboard/sale-car'>Отмена</a>
+              <Link href='/dashboard/sale-car'>Отмена</Link>
             </Button>
             <Button
               type='submit'

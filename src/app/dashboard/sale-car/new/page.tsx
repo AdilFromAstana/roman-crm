@@ -13,6 +13,7 @@ import NotesSection from '../components/NotesSection';
 import { useState } from 'react';
 import { BringCar, SaleFormData } from '@/types';
 import api from '@/lib/axios';
+import Link from 'next/link';
 
 export default function NewSaleCarPage() {
   const [formData, setFormData] = useState<SaleFormData>({});
@@ -79,9 +80,9 @@ export default function NewSaleCarPage() {
       <div className='mx-auto w-full max-w-4xl space-y-6 pb-20'>
         <div className='flex items-center gap-4'>
           <Button variant='outline' size='icon' asChild>
-            <a href='/dashboard/sale-car'>
+            <Link href='/dashboard/sale-car'>
               <ChevronLeft className='h-4 w-4' />
-            </a>
+            </Link>
           </Button>
           <h1 className='text-3xl font-bold'>Добавить новую продажу</h1>
         </div>
@@ -119,7 +120,7 @@ export default function NewSaleCarPage() {
 
           <div className='flex justify-end gap-3 border-t pt-6'>
             <Button variant='outline' asChild>
-              <a href='/dashboard/sale-car'>Отмена</a>
+              <Link href='/dashboard/sale-car'>Отмена</Link>
             </Button>
             <Button
               type='submit'
