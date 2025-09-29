@@ -1,7 +1,6 @@
 'use client';
 
 import type { Option } from '@/types/data-table';
-import type { Column } from '@tanstack/react-table';
 import { PlusCircle, XCircle } from 'lucide-react';
 
 import { Badge } from '@/components/ui/badge';
@@ -26,7 +25,7 @@ import * as React from 'react';
 import { CheckIcon } from '@radix-ui/react-icons';
 
 interface DataTableFacetedFilterProps<TData, TValue> {
-  column?: Column<TData, TValue>;
+  column?: any;
   title?: string;
   options: Option[];
   multiple?: boolean;

@@ -2,14 +2,13 @@
 'use client';
 
 import { Cross2Icon } from '@radix-ui/react-icons';
-import { Table } from '@tanstack/react-table';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { ColumnVisibilityToggle } from './column-visibility-toggle';
 import React, { useState, useEffect, useRef } from 'react';
 
 interface DataTableToolbarProps<TData> {
-  table: Table<TData>;
+  table: any;
   tableType?: string;
   basePath?: string;
   viewModal?: React.ComponentType<{ client: TData; trigger: React.ReactNode }>;
@@ -153,7 +152,7 @@ export function DataTableToolbar<TData>({
           )}
         </div>
         <div className='flex items-center space-x-2'>
-          <ColumnVisibilityToggle table={table} tableType={tableType} />
+          <ColumnVisibilityToggle table={table || '-'} tableType={tableType} />
         </div>
       </div>
 

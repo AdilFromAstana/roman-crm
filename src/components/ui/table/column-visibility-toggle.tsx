@@ -40,6 +40,7 @@ const FALLBACK_COLUMN_NAMES: Record<string, string> = {
 };
 
 interface ColumnVisibilityToggleProps<TData> {
+  table: any;
   tableType?: string;
 }
 

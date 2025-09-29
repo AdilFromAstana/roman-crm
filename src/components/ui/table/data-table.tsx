@@ -1,24 +1,15 @@
 // components/ui/table/data-table.tsx
 'use client';
 
-import { type Table as TanstackTable, flexRender } from '@tanstack/react-table';
 import type * as React from 'react';
 import { DataTablePagination } from '@/components/ui/table/data-table-pagination';
-import {
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow
-} from '@/components/ui/table';
-import { getCommonPinningStyles } from '@/lib/data-table';
+import { Table } from '@/components/ui/table';
 import { ScrollArea, ScrollBar } from '@/components/ui/scroll-area';
 import { useRouter } from 'next/navigation';
 import { Loader2 } from 'lucide-react';
 
 interface DataTableProps<TData> extends React.ComponentProps<'div'> {
-  table: TanstackTable<TData>;
+  table: any;
   actionBar?: React.ReactNode;
   basePath: string;
   tableType?: string;
@@ -76,69 +67,7 @@ export function DataTable<TData>({
       <div className='relative flex flex-1'>
         <div className='absolute inset-0 flex overflow-hidden rounded-lg border'>
           <ScrollArea className='h-full w-full'>
-            <Table>
-              <TableHeader className='bg-muted sticky top-0 z-10'>
-                {table.getHeaderGroups().map((headerGroup) => (
-                  <TableRow key={headerGroup.id}>
-                    {headerGroup.headers.map((header) => (
-                      <TableHead
-                        key={header.id}
-                        colSpan={header.colSpan}
-                        style={{
-                          ...getCommonPinningStyles({ column: header.column })
-                        }}
-                      >
-                        {header.isPlaceholder
-                          ? null
-                          : flexRender(
-                              header.column.columnDef.header,
-                              header.getContext()
-                            )}
-                      </TableHead>
-                    ))}
-                  </TableRow>
-                ))}
-              </TableHeader>
-              <TableBody>
-                {rows.length ? (
-                  rows.map((row) => (
-                    <TableRow
-                      onClick={() => handleRowClick(row.original)}
-                      key={row.id}
-                      data-state={row.getIsSelected() && 'selected'}
-                      className={
-                        isClickable || onRowClick
-                          ? 'hover:bg-muted/50 cursor-pointer'
-                          : ''
-                      }
-                    >
-                      {row.getVisibleCells().map((cell) => (
-                        <TableCell
-                          key={cell.id}
-                          style={{
-                            ...getCommonPinningStyles({ column: cell.column })
-                          }}
-                        >
-                          {flexRender(
-                            cell.column.columnDef.cell,
-                            cell.getContext()
-                          )}
-                        </TableCell>
-                      ))}
-                    </TableRow>
-                  ))
-                ) : (
-                  <TableRow>
-                    <TableCell
-                      colSpan={table.getAllColumns().length}
-                      className='h-24 text-center'
-                    >
-                      Нет результатов.
-                    </TableCell>
-                  </TableRow>
-                )}
-              </TableBody>
-            </Table>
+            <Table></Table>
             <ScrollBar orientation='horizontal' />
           </ScrollArea>
         </div>

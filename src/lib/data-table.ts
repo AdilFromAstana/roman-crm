@@ -3,7 +3,6 @@ import type {
   FilterOperator,
   FilterVariant
 } from '@/types/data-table';
-import type { Column } from '@tanstack/react-table';
 
 import { dataTableConfig } from '@/config/data-table';
 
@@ -11,7 +10,7 @@ export function getCommonPinningStyles<TData>({
   column,
   withBorder = false
 }: {
-  column: Column<TData>;
+  column: any;
   withBorder?: boolean;
 }): React.CSSProperties {
   const isPinned = column.getIsPinned();

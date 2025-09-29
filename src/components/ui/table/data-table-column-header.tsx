@@ -1,6 +1,5 @@
 'use client';
 
-import type { Column } from '@tanstack/react-table';
 import { EyeOff } from 'lucide-react';
 
 import {
@@ -20,7 +19,7 @@ import {
 
 interface DataTableColumnHeaderProps<TData, TValue>
   extends React.ComponentProps<typeof DropdownMenuTrigger> {
-  column: Column<TData, TValue>;
+  column: any;
   title: string;
 }
 

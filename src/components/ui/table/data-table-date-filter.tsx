@@ -1,6 +1,5 @@
 'use client';
 
-import type { Column } from '@tanstack/react-table';
 import { CalendarIcon, XCircle } from 'lucide-react';
 import * as React from 'react';
 import type { DateRange } from 'react-day-picker';
@@ -51,7 +50,7 @@ function parseColumnFilterValue(value: unknown) {
 }
 
 interface DataTableDateFilterProps<TData> {
-  column: Column<TData, unknown>;
+  column: any;
   title?: string;
   multiple?: boolean;
 }
