@@ -31,6 +31,8 @@ export default function CustomerSelector({ formData, setFormData }: Props) {
     queryFn: async () => (await api.get('/customers')).data
   });
 
+  const clientName = `${formData?.customer?.firstName} ${formData?.customer?.lastName}`;
+
   // Колонки таблицы клиентов
   const customerColumns: Column<Customer>[] = [
     { key: 'firstName', label: 'Имя' },
@@ -46,7 +48,6 @@ export default function CustomerSelector({ formData, setFormData }: Props) {
             setFormData((prev) => ({
               ...prev,
               customerId: row.id,
-              clientName: `${row.firstName} ${row.lastName}`,
               clientPhone: row.phone,
               customer: row
             }));
@@ -72,8 +73,8 @@ export default function CustomerSelector({ formData, setFormData }: Props) {
         <Dialog open={isOpen} onOpenChange={setIsOpen}>
           <DialogTrigger asChild>
             <Button variant='outline' className='w-full justify-between'>
-              {formData.clientName ? (
-                <span>{formData.clientName}</span>
+              {formData?.customer ? (
+                <span>{clientName}</span>
               ) : (
                 <span className='text-muted-foreground'>
                   Найти или создать клиента
@@ -195,7 +196,7 @@ export default function CustomerSelector({ formData, setFormData }: Props) {
             <div className='space-y-2'>
               <Label>Телефон *</Label>
               <Input
-                value={formData.clientPhone || ''}
+                value={formData.customer?.phone || ''}
                 onChange={(e) =>
                   setFormData((prev) => ({
                     ...prev,

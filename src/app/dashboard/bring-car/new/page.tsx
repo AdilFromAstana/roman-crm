@@ -20,8 +20,8 @@ import { Checkbox } from '@/components/ui/checkbox';
 import { Separator } from '@/components/ui/separator';
 // import { BRANDS, EMPLOYEES, FEATURES, MODELS_BY_BRAND } from '@/constants/data';
 import { useState, useRef, useEffect } from 'react';
-import axios from 'axios';
 import { useRouter } from 'next/navigation';
+import api from '@/lib/axios';
 
 interface ImageWithPreview {
   file: File;
@@ -163,10 +163,11 @@ export default function NewBringCarPage() {
         bringEmployeeId: selectedEmployee,
         createdAt,
         imageUrls,
-        isActive: true
+        isActive: true,
+        bringCarStatusCode: "BRINGED"
       };
 
-      await axios.post('http://localhost:3001/bring-cars', dto); // прокси на твой NestJS (или прям URL)
+      await api.post('/bring-cars', dto); // прокси на твой NestJS (или прям URL)
 
       router.push('/dashboard/bring-car');
     } catch (err) {
@@ -188,12 +189,12 @@ export default function NewBringCarPage() {
           employeesRes,
           featuresRes
         ] = await Promise.all([
-          axios.get('http://localhost:3001/brands'),
-          axios.get('http://localhost:3001/colors'),
-          axios.get('http://localhost:3001/fuel-types'),
-          axios.get('http://localhost:3001/transmissions'),
-          axios.get('http://localhost:3001/employees'),
-          axios.get('http://localhost:3001/features')
+          api.get('/brands'),
+          api.get('/colors'),
+          api.get('/fuel-types'),
+          api.get('/transmissions'),
+          api.get('/employees'),
+          api.get('/features')
         ]);
 
         setBrands(brandsRes.data);
@@ -219,9 +220,7 @@ export default function NewBringCarPage() {
       }
       const needBrandId = brands.find((b) => b.code === selectedBrand)?.id;
       try {
-        const res = await axios.get(
-          `http://localhost:3001/models?brandId=${needBrandId}`
-        );
+        const res = await api.get(`/models?brandId=${needBrandId}`);
         setModels(res.data);
       } catch (err) {
         console.error('Ошибка загрузки моделей', err);

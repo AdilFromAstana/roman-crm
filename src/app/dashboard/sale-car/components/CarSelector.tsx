@@ -25,8 +25,14 @@ export default function CarSelector({ selectedCar, onSelect }: Props) {
   const [isSearchModalOpen, setIsSearchModalOpen] = useState(false);
 
   const { data, isLoading } = useQuery({
-    queryKey: ['bring-cars'],
-    queryFn: async () => (await api.get('/bring-cars')).data
+    queryKey: ['bring-cars', 'BRINGED'], // ← добавили статус в ключ
+    queryFn: async () => {
+      const params = new URLSearchParams();
+      params.set('bringCarStatusCode', 'BRINGED'); // ← фильтр по статусу
+      params.set('limit', '100'); // ← можно увеличить лимит, если машин не много
+      const res = await api.get(`/bring-cars?${params.toString()}`);
+      return res.data;
+    }
   });
 
   const carColumns: Column<BringCar>[] = [

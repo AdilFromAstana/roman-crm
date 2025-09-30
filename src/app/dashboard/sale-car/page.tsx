@@ -1,3 +1,4 @@
+// app/(dashboard)/sale-car/page.tsx
 'use client';
 
 import { useQuery } from '@tanstack/react-query';
@@ -7,11 +8,19 @@ import AdvancedDataTable, { type Column } from '@/components/customTable';
 import { Sale } from '@/types';
 import { Button } from '@/components/ui/button';
 import Link from 'next/link';
+import { Eye } from 'lucide-react';
 
+// Форматирование цены с выравниванием по правому краю
 const formatPrice = (value?: number | string) => {
   if (!value) return '-';
   const num = typeof value === 'string' ? parseFloat(value) : value;
   return new Intl.NumberFormat('ru-RU').format(num) + ' ₸';
+};
+
+// Форматирование ФИО сотрудника
+const formatEmployee = (employee: any) => {
+  if (!employee) return '-';
+  return `${employee.firstName} ${employee.lastName[0]}.`;
 };
 
 export default function SaleCarPage() {
@@ -43,7 +52,14 @@ export default function SaleCarPage() {
         ) {
           return;
         }
-        params.set(key, String(value));
+        // Обработка salesStatusCode
+        if (key === 'salesStatusCode') {
+          params.set('salesStatusCode', value);
+        } else if (key === 'isCommissionPaid') {
+          params.set('isCommissionPaid', value);
+        } else {
+          params.set(key, String(value));
+        }
       });
       const res = await api.get(`/sales?${params.toString()}`);
       return res.data;
@@ -54,85 +70,152 @@ export default function SaleCarPage() {
     {
       key: 'bringCar',
       label: 'Автомобиль',
-      render: (_, row) =>
-        `${row.bringCar.brand?.name || ''} ${row.bringCar.model?.name || ''} ${
-          row.bringCar.year || ''
-        }`.trim()
+      sortable: true,
+      filterable: true,
+      filterType: 'text',
+      render: (_, row) => {
+        const car = row.bringCar;
+        return (
+          <div className='font-medium'>
+            <div>
+              {car.brand?.name || ''} {car.model?.name || ''}
+            </div>
+            <div className='text-sm text-gray-500'>
+              {car.year} · {car.mileage?.toLocaleString()} км
+            </div>
+          </div>
+        );
+      },
+      width: '180px'
     },
     {
       key: 'customer',
       label: 'Клиент',
-      render: (_, row) =>
-        `${row.customer.firstName} ${row.customer.lastName}`.trim()
+      sortable: true,
+      filterable: true,
+      filterType: 'text',
+      render: (_, row) => (
+        <div>
+          <div className='font-medium'>
+            {row.customer.lastName} {row.customer.firstName}
+          </div>
+          <div className='text-sm text-gray-500'>{row.customer.phone}</div>
+        </div>
+      ),
+      width: '160px'
     },
     {
       key: 'purchasePrice',
-      label: 'Цена покупки',
+      label: 'Закуп',
       sortable: true,
       filterable: true,
       filterType: 'range',
-      render: (value: string) => formatPrice(value)
+      render: (value: string) => (
+        <span className='block w-full text-right font-mono text-gray-700'>
+          {formatPrice(value)}
+        </span>
+      ),
+      width: '110px'
     },
     {
       key: 'salePrice',
-      label: 'Цена продажи',
+      label: 'Продажа',
       sortable: true,
       filterable: true,
       filterType: 'range',
-      render: (value: string) => formatPrice(value)
+      render: (value: string) => (
+        <span className='block w-full text-right font-mono font-semibold text-green-700'>
+          {formatPrice(value)}
+        </span>
+      ),
+      width: '110px'
     },
     {
       key: 'netProfit',
-      label: 'Чистая прибыль',
+      label: 'Прибыль',
       sortable: true,
       filterable: true,
       filterType: 'range',
-      render: (value: string) => formatPrice(value)
+      render: (value: string) => {
+        const num = parseFloat(value);
+        const isPositive = num > 0;
+        return (
+          <span
+            className={`block w-full text-right font-mono font-bold ${
+              isPositive
+                ? 'text-green-600'
+                : num < 0
+                  ? 'text-red-600'
+                  : 'text-gray-600'
+            }`}
+          >
+            {formatPrice(value)}
+          </span>
+        );
+      },
+      width: '110px'
     },
     {
       key: 'saleEmployee',
       label: 'Продавец',
-      render: (_, row) =>
-        `${row.saleEmployee?.firstName || ''} ${
-          row.saleEmployee?.lastName || ''
-        }`.trim()
+      render: (_, row) => (
+        <span className='text-sm'>{formatEmployee(row.saleEmployee)}</span>
+      ),
+      width: '100px'
     },
     {
       key: 'bringEmployee',
-      label: 'Загнал авто',
-      render: (_, row) =>
-        `${row.bringEmployee?.firstName || ''} ${
-          row.bringEmployee?.lastName || ''
-        }`.trim()
+      label: 'Загнал',
+      render: (_, row) => (
+        <span className='text-sm'>{formatEmployee(row.bringEmployee)}</span>
+      ),
+      width: '100px'
     },
     {
       key: 'managerEmployee',
       label: 'Менеджер',
-      render: (_, row) =>
-        `${row.managerEmployee?.firstName || ''} ${
-          row.managerEmployee?.lastName || ''
-        }`.trim()
+      render: (_, row) => (
+        <span className='text-sm'>{formatEmployee(row.managerEmployee)}</span>
+      ),
+      width: '100px'
     },
     {
       key: 'totalBonuses',
-      label: 'Бонусы всего',
+      label: 'Бонусы',
       sortable: true,
       filterable: true,
       filterType: 'range',
-      render: (value: string) => formatPrice(value)
+      render: (value: string) => (
+        <span className='block w-full text-right font-mono text-blue-600'>
+          {formatPrice(value)}
+        </span>
+      ),
+      width: '110px'
     },
     {
-      key: 'salesStatus',
+      key: 'salesStatusCode',
       label: 'Статус',
       sortable: true,
       filterable: true,
       filterType: 'select',
       filterOptions: [
-        { value: 'COMMISSION_ISSUED', label: 'Комиссия выдана' },
         { value: 'IN_PROGRESS', label: 'В процессе' },
+        { value: 'COMMISSION_ISSUED', label: 'Комиссия выдана' },
         { value: 'CANCELLED', label: 'Отменена' }
       ],
-      render: (_, row) => row.salesStatus?.name || row.salesStatusCode
+      render: (_, row) => {
+        const status = row.salesStatus;
+        if (!status) return '-';
+        return (
+          <span
+            className='inline-flex items-center rounded-full px-2.5 py-0.5 text-xs font-medium text-white'
+            style={{ backgroundColor: status.color || '#6b7280' }}
+          >
+            {status.name}
+          </span>
+        );
+      },
+      width: '130px'
     },
     {
       key: 'saleDate',
@@ -141,7 +224,8 @@ export default function SaleCarPage() {
       filterable: true,
       filterType: 'date',
       render: (value: string) =>
-        value ? new Date(value).toLocaleDateString('ru-RU') : '-'
+        value ? new Date(value).toLocaleDateString('ru-RU') : '-',
+      width: '120px'
     },
     {
       key: 'isCommissionPaid',
@@ -150,38 +234,52 @@ export default function SaleCarPage() {
       filterable: true,
       filterType: 'select',
       filterOptions: [
-        { value: 'true', label: 'Да' },
-        { value: 'false', label: 'Нет' }
+        { value: 'true', label: 'Выплачена' },
+        { value: 'false', label: 'Не выплачена' }
       ],
-      render: (value: boolean) => (value ? 'Да' : 'Нет')
+      render: (value: boolean) => (
+        <span
+          className={`inline-flex items-center rounded-full px-2 py-0.5 text-xs font-medium ${
+            value
+              ? 'bg-green-100 text-green-800'
+              : 'bg-yellow-100 text-yellow-800'
+          }`}
+        >
+          {value ? 'Выплачена' : 'Не выплачена'}
+        </span>
+      ),
+      width: '110px'
     },
     {
       key: 'actions',
-      label: 'Действие',
+      label: '',
       render: (_, row) => (
         <Button
+          variant='ghost'
           size='sm'
+          className='h-8 w-8 p-0 hover:bg-gray-100'
           onClick={() =>
             (window.location.href = `/dashboard/sale-car/${row.id}`)
           }
         >
-          Выбрать
+          <Eye className='h-4 w-4 text-gray-600' />
         </Button>
-      )
+      ),
+      width: '60px'
     }
   ];
 
   return (
-    <div className='container mx-auto py-8'>
-      <div className='mb-6 flex items-center justify-between'>
-        <h1 className='text-2xl font-bold'>Продажи</h1>
+    <div className='mx-auto w-full p-4 md:p-8'>
+      <div className='mb-6 flex flex-col items-start justify-between gap-4 sm:flex-row sm:items-center'>
+        <h1 className='text-2xl font-bold text-gray-900'>Продажи</h1>
         <Button asChild>
           <Link href='/dashboard/sale-car/new'>Добавить продажу</Link>
         </Button>
       </div>
 
       <AdvancedDataTable<Sale>
-        data={data || []}
+        data={data?.data || []}
         columns={columns}
         totalCount={data?.total || 0}
         currentPage={page}
@@ -198,11 +296,13 @@ export default function SaleCarPage() {
           'bringCar.brand.name',
           'bringCar.model.name',
           'customer.firstName',
-          'customer.lastName'
+          'customer.lastName',
+          'customer.phone'
         ]}
         loading={isLoading}
-        showFilters
-        showColumnVisibility
+        showFilters={true}
+        showColumnVisibility={true}
+        emptyMessage='Продажи не найдены'
       />
     </div>
   );

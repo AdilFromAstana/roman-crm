@@ -157,19 +157,6 @@ export default function EditSaleCarPage() {
 
           {success && <p className='text-green-600'>{success}</p>}
           {error && <p className='text-red-600'>{error}</p>}
-
-          <div className='flex justify-end gap-3 border-t pt-6'>
-            <Button variant='outline' asChild>
-              <Link href='/dashboard/sale-car'>Отмена</Link>
-            </Button>
-            <Button
-              type='submit'
-              className='bg-green-600 hover:bg-green-700'
-              disabled={saving}
-            >
-              {saving ? 'Сохранение...' : 'Сохранить изменения'}
-            </Button>
-          </div>
         </form>
       </div>
     </PageContainer>

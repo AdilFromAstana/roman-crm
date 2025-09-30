@@ -2,12 +2,16 @@
 import axios from 'axios';
 
 const api = axios.create({
-  baseURL: process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3001/',
+  baseURL:
+    process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3001',
   timeout: 10000
 });
 
 // Интерцепторы (опционально)
 api.interceptors.request.use((config) => {
+  // обязательный хедер для обхода ngrok warning
+  config.headers['ngrok-skip-browser-warning'] = 'true';
+
   // Добавь токен, если нужно
   const token = localStorage.getItem('token');
   if (token) {

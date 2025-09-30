@@ -1,15 +1,9 @@
 // components/ui/advanced-data-table.tsx
 'use client';
 
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue
-} from '@radix-ui/react-select';
-import { useState, useMemo } from 'react';
+import { useState, useMemo, useEffect } from 'react';
 import { MultiSelect } from './ui/multi-select';
+import { SingleSelect } from './ui/single-select';
 
 type FilterType =
   | 'text'
@@ -91,6 +85,7 @@ export default function AdvancedDataTable<T extends { id?: any }>({
     )
   );
   const [showFilterPanel, setShowFilterPanel] = useState(false);
+  const [showColumnMenu, setShowColumnMenu] = useState(false);
 
   // Внутренняя пагинация, если не переданы внешние обработчики
   const [internalCurrentPage, setInternalCurrentPage] = useState(1);
@@ -235,74 +230,113 @@ export default function AdvancedDataTable<T extends { id?: any }>({
     return columns.filter((col) => columnVisibility[String(col.key)] !== false);
   }, [columns, columnVisibility]);
 
+  useEffect(() => {
+    const handleClickOutside = () => {
+      setShowColumnMenu(false);
+    };
+
+    if (showColumnMenu) {
+      document.addEventListener('click', handleClickOutside);
+    }
+
+    return () => {
+      document.removeEventListener('click', handleClickOutside);
+    };
+  }, [showColumnMenu]);
+
   if (loading) {
     return (
-      <div className='rounded-lg bg-white p-4 shadow'>
-        <div className='flex items-center justify-center py-8'>
-          <div className='h-8 w-8 animate-spin rounded-full border-b-2 border-blue-600'></div>
+      <div className='rounded-xl border border-gray-200 bg-white p-6 shadow-sm'>
+        <div className='flex items-center justify-center py-10'>
+          <div className='h-6 w-6 animate-spin rounded-full border-2 border-blue-600 border-t-transparent'></div>
         </div>
       </div>
     );
   }
 
   return (
-    <div className='rounded-lg bg-white p-4 shadow'>
+    <div className='max-w-[calc(100vw-16rem)] bg-white lg:max-w-[calc(100vw-20rem)] border-none border-0 border-transparent'>
       {/* Панель управления */}
-      <div className='mb-4 space-y-3'>
+      <div className='mb-5 space-y-4'>
         {/* Поиск и основные кнопки */}
-        <div className='flex flex-wrap items-center justify-between gap-2'>
-          <div className='flex flex-1 gap-2'>
+        <div className='flex flex-wrap items-center justify-between gap-3'>
+          <div className='flex flex-1 flex-wrap items-center gap-3'>
             {(onSearch || searchFields.length > 0) && (
-              <input
-                type='text'
-                placeholder='Поиск по таблице...'
-                value={onSearch ? searchTerm : internalSearchTerm}
-                onChange={handleSearchChange}
-                className='min-w-64 flex-1 rounded-md border border-gray-300 px-4 py-2 focus:ring-2 focus:ring-blue-500 focus:outline-none'
-              />
+              <div className='relative min-w-[240px] flex-1'>
+                <input
+                  type='text'
+                  placeholder='Поиск по таблице...'
+                  value={onSearch ? searchTerm : internalSearchTerm}
+                  onChange={handleSearchChange}
+                  className='w-full rounded-lg border border-gray-300 px-4 py-2.5 text-sm transition outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-500'
+                />
+              </div>
             )}
 
             {showFilters && (
               <button
                 onClick={() => setShowFilterPanel(!showFilterPanel)}
-                className='rounded-md border border-gray-300 px-4 py-2 hover:bg-gray-50'
+                className='inline-flex items-center justify-center rounded-lg border border-gray-300 bg-white px-4 py-2.5 text-sm font-medium text-gray-700 transition-colors hover:bg-gray-50'
               >
-                Фильтры{' '}
-                {Object.keys(actualFilters).some((key) => actualFilters[key])
-                  ? `(${Object.keys(actualFilters).filter((key) => actualFilters[key]).length})`
-                  : ''}
+                Фильтры
+                {Object.keys(actualFilters).some(
+                  (key) => actualFilters[key]
+                ) && (
+                  <span className='ml-2 flex h-5 w-5 items-center justify-center rounded-full bg-blue-100 text-xs font-bold text-blue-700'>
+                    {
+                      Object.keys(actualFilters).filter(
+                        (key) => actualFilters[key]
+                      ).length
+                    }
+                  </span>
+                )}
               </button>
             )}
 
-            <div className='group relative'>
-              <button className='rounded-md border border-gray-300 px-4 py-2 hover:bg-gray-50'>
+            <div className='relative'>
+              <button
+                onClick={() => setShowColumnMenu(!showColumnMenu)}
+                className='inline-flex items-center justify-center rounded-lg border border-gray-300 bg-white px-4 py-2.5 text-sm font-medium text-gray-700 transition-colors hover:bg-gray-50 focus:ring-2 focus:ring-blue-500 focus:outline-none'
+                aria-haspopup='true'
+                aria-expanded={showColumnMenu}
+              >
                 Колонки
               </button>
-              <div className='absolute right-0 z-10 mt-1 hidden w-64 rounded-md border border-gray-200 bg-white shadow-lg group-hover:block'>
-                <div className='max-h-64 overflow-y-auto p-2'>
-                  {columns.map((col) => (
-                    <label
-                      key={String(col.key)}
-                      className='flex items-center gap-2 py-1'
-                    >
-                      <input
-                        type='checkbox'
-                        checked={columnVisibility[String(col.key)] !== false}
-                        onChange={() => toggleColumnVisibility(String(col.key))}
-                        className='rounded'
-                      />
-                      <span className='text-sm'>{col.label}</span>
-                    </label>
-                  ))}
+
+              {showColumnMenu && (
+                <div
+                  className='absolute right-0 z-20 mt-2 w-60 rounded-lg border border-gray-200 bg-white shadow-lg'
+                  onMouseLeave={() => setShowColumnMenu(false)} // опционально: скрывать при выходе из меню
+                >
+                  <div className='max-h-60 overflow-y-auto p-3'>
+                    {columns.map((col) => (
+                      <label
+                        key={String(col.key)}
+                        className='flex cursor-pointer items-center gap-3 rounded px-1 py-1.5 hover:bg-gray-50'
+                      >
+                        <input
+                          type='checkbox'
+                          checked={columnVisibility[String(col.key)] !== false}
+                          onChange={() =>
+                            toggleColumnVisibility(String(col.key))
+                          }
+                          className='h-4 w-4 rounded text-blue-600 focus:ring-blue-500'
+                        />
+                        <span className='text-sm text-gray-700'>
+                          {col.label}
+                        </span>
+                      </label>
+                    ))}
+                  </div>
                 </div>
-              </div>
+              )}
             </div>
 
             {(Object.keys(actualFilters).some((key) => actualFilters[key]) ||
               (onSearch ? searchTerm : internalSearchTerm)) && (
               <button
                 onClick={clearFilters}
-                className='rounded-md border border-red-300 px-4 py-2 text-red-600 hover:bg-red-50'
+                className='inline-flex items-center justify-center rounded-lg border border-red-300 bg-white px-4 py-2.5 text-sm font-medium text-red-600 transition-colors hover:bg-red-50'
               >
                 Сбросить
               </button>
@@ -312,11 +346,11 @@ export default function AdvancedDataTable<T extends { id?: any }>({
           <select
             value={actualRowsPerPage}
             onChange={(e) => handleRowsPerPageChange(Number(e.target.value))}
-            className='rounded-md border border-gray-300 px-3 py-2 focus:ring-2 focus:ring-blue-500 focus:outline-none'
+            className='rounded-lg border border-gray-300 bg-white px-3 py-2.5 text-sm outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-500'
           >
             {[5, 10, 25, 50].map((size) => (
               <option key={size} value={size}>
-                {size} / страница
+                {size} / стр.
               </option>
             ))}
           </select>
@@ -324,18 +358,18 @@ export default function AdvancedDataTable<T extends { id?: any }>({
 
         {/* Панель фильтров */}
         {showFilterPanel && showFilters && (
-          <div className='rounded-md border border-gray-200 bg-gray-50 p-4'>
-            <div className='grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4'>
+          <div className='rounded-lg border border-gray-200 bg-gray-50 p-5'>
+            <div className='grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4'>
               {columns
                 .filter((col) => col.filterable)
                 .map((col) => (
-                  <div key={String(col.key)} className='space-y-1'>
-                    <label className='block text-sm font-medium text-gray-700'>
+                  <div key={String(col.key)} className='space-y-1.5'>
+                    <label className='block text-xs font-semibold tracking-wide text-gray-600 uppercase'>
                       {col.label}
                     </label>
 
                     {col.filterType === 'range' ? (
-                      <div className='flex gap-1'>
+                      <div className='flex gap-2'>
                         <input
                           type='number'
                           value={actualFilters[`${String(col.key)}-from`] || ''}
@@ -346,9 +380,8 @@ export default function AdvancedDataTable<T extends { id?: any }>({
                             )
                           }
                           placeholder='От'
-                          className='w-full rounded-md border border-gray-300 px-2 py-1 text-sm focus:ring-2 focus:ring-blue-500 focus:outline-none'
+                          className='flex-1 rounded-lg border border-gray-300 px-3 py-2 text-sm outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-500'
                         />
-                        <span className='self-center'>-</span>
                         <input
                           type='number'
                           value={actualFilters[`${String(col.key)}-to`] || ''}
@@ -359,30 +392,19 @@ export default function AdvancedDataTable<T extends { id?: any }>({
                             )
                           }
                           placeholder='До'
-                          className='w-full rounded-md border border-gray-300 px-2 py-1 text-sm focus:ring-2 focus:ring-blue-500 focus:outline-none'
+                          className='flex-1 rounded-lg border border-gray-300 px-3 py-2 text-sm outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-500'
                         />
                       </div>
                     ) : col.filterType === 'select' ? (
-                      <Select
+                      <SingleSelect
+                        options={col.filterOptions || []}
                         value={actualFilters[String(col.key)] || ''}
-                        onValueChange={(value) =>
+                        onChange={(value) =>
                           handleFilterChange(String(col.key), value)
                         }
-                      >
-                        <SelectTrigger className='w-full'>
-                          <SelectValue
-                            placeholder={`Выберите ${col.label.toLowerCase()}`}
-                          />
-                        </SelectTrigger>
-                        <SelectContent>
-                          <SelectItem value='__all__'>Все</SelectItem>
-                          {col.filterOptions?.map((option) => (
-                            <SelectItem key={option.value} value={option.value}>
-                              {option.label}
-                            </SelectItem>
-                          ))}
-                        </SelectContent>
-                      </Select>
+                        placeholder={`Выберите ${col.label.toLowerCase()}`}
+                        className='w-full'
+                      />
                     ) : col.filterType === 'multiselect' ? (
                       <MultiSelect
                         options={col.filterOptions || []}
@@ -404,7 +426,7 @@ export default function AdvancedDataTable<T extends { id?: any }>({
                           handleFilterChange(String(col.key), e.target.value)
                         }
                         placeholder={`Фильтр по ${col.label.toLowerCase()}`}
-                        className='w-full rounded-md border border-gray-300 px-3 py-2 focus:ring-2 focus:ring-blue-500 focus:outline-none'
+                        className='w-full rounded-lg border border-gray-300 px-3 py-2 text-sm outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-500'
                       />
                     )}
                   </div>
@@ -415,98 +437,103 @@ export default function AdvancedDataTable<T extends { id?: any }>({
       </div>
 
       {/* Таблица */}
-      <div className='overflow-x-auto rounded-lg border border-gray-200 bg-white shadow-sm'>
-        <table className='min-w-full divide-y divide-gray-200'>
-          <thead className='sticky top-0 z-10 bg-gray-100'>
-            <tr>
-              {visibleColumns.map((column) => (
-                <th
-                  key={String(column.key)}
-                  onClick={() =>
-                    column.sortable && onSort && handleSort(column.key)
-                  }
-                  className={`px-5 py-3 text-left text-sm font-semibold tracking-wider text-gray-700 uppercase ${
-                    column.sortable && onSort
-                      ? 'cursor-pointer select-none hover:bg-gray-200'
-                      : ''
-                  }`}
-                  style={{ width: column.width }}
-                >
-                  <div className='flex items-center gap-1'>
-                    {column.label}
-                    {sortConfig?.key === column.key && onSort && (
-                      <span className='text-xs'>
-                        {sortConfig.direction === 'ASC' ? '▲' : '▼'}
-                      </span>
-                    )}
-                  </div>
-                </th>
-              ))}
-            </tr>
-          </thead>
-          <tbody className='divide-y divide-gray-100 bg-white'>
-            {paginatedData.length > 0 ? (
-              paginatedData.map((row, index) => (
-                <tr
-                  key={row.id ?? index}
-                  className={`transition ${
-                    index % 2 === 0 ? 'bg-white' : 'bg-gray-50'
-                  } hover:bg-blue-50`}
-                >
-                  {visibleColumns.map((column) => (
-                    <td
-                      key={String(column.key)}
-                      className='px-5 py-3 text-sm text-gray-800'
-                      style={{ width: column.width }}
-                    >
-                      {column.render
-                        ? column.render(
-                            getNestedValue(row, column.key as string),
-                            row
-                          )
-                        : String(
-                            getNestedValue(row, column.key as string) ?? ''
-                          )}
-                    </td>
-                  ))}
-                </tr>
-              ))
-            ) : (
+      <div className='w-full overflow-x-auto rounded-xl'>
+        <div className='min-w-max'>
+          <table className='min-w-full divide-y divide-gray-200'>
+            <thead className='sticky top-0 z-10 bg-gray-50'>
               <tr>
-                <td
-                  colSpan={visibleColumns.length}
-                  className='px-5 py-8 text-center text-sm text-gray-500'
-                >
-                  {emptyMessage}
-                </td>
+                {visibleColumns.map((column) => (
+                  <th
+                    key={String(column.key)}
+                    onClick={() =>
+                      column.sortable && onSort && handleSort(column.key)
+                    }
+                    className={`px-6 py-3.5 text-left text-xs font-semibold tracking-wider text-gray-600 uppercase ${
+                      column.sortable && onSort
+                        ? 'cursor-pointer transition-colors select-none hover:bg-gray-100'
+                        : ''
+                    }`}
+                    style={{ width: column.width }}
+                  >
+                    <div className='flex items-center gap-1.5'>
+                      {column.label}
+                      {sortConfig?.key === column.key && onSort && (
+                        <span className='text-gray-500'>
+                          {sortConfig.direction === 'ASC' ? '↑' : '↓'}
+                        </span>
+                      )}
+                    </div>
+                  </th>
+                ))}
               </tr>
-            )}
-          </tbody>
-        </table>
+            </thead>
+            <tbody className='divide-y divide-gray-100 bg-white'>
+              {paginatedData.length > 0 ? (
+                paginatedData.map((row, index) => (
+                  <tr
+                    key={row.id ?? index}
+                    className={`transition-colors ${
+                      index % 2 === 0 ? 'bg-white' : 'bg-gray-50'
+                    } hover:bg-blue-50`}
+                  >
+                    {visibleColumns.map((column) => (
+                      <td
+                        key={String(column.key)}
+                        className='px-6 py-4 text-sm text-gray-800'
+                        style={{ width: column.width }}
+                      >
+                        {column.render
+                          ? column.render(
+                              getNestedValue(row, column.key as string),
+                              row
+                            )
+                          : String(
+                              getNestedValue(row, column.key as string) ?? ''
+                            )}
+                      </td>
+                    ))}
+                  </tr>
+                ))
+              ) : (
+                <tr>
+                  <td
+                    colSpan={visibleColumns.length}
+                    className='px-6 py-10 text-center text-sm text-gray-500'
+                  >
+                    {emptyMessage}
+                  </td>
+                </tr>
+              )}
+            </tbody>
+          </table>
+        </div>
       </div>
 
       {/* Пагинация */}
-      <div className='mt-4 flex items-center justify-between border-t border-gray-200 pt-4'>
+      <div className='mt-6 flex flex-col items-center justify-between gap-3 border-t border-gray-200 pt-5 sm:flex-row'>
         <p className='text-sm text-gray-600'>
-          Показано {(actualCurrentPage - 1) * actualRowsPerPage + 1} –{' '}
-          {Math.min(actualCurrentPage * actualRowsPerPage, actualTotalCount)} из{' '}
-          {actualTotalCount}
+          Показано{' '}
+          <span className='font-medium'>
+            {(actualCurrentPage - 1) * actualRowsPerPage + 1}–
+            {Math.min(actualCurrentPage * actualRowsPerPage, actualTotalCount)}
+          </span>{' '}
+          из <span className='font-medium'>{actualTotalCount}</span>
         </p>
         <div className='flex items-center gap-2'>
           <button
             onClick={() => handlePageChange(actualCurrentPage - 1)}
             disabled={actualCurrentPage === 1}
-            className='rounded-md border border-gray-300 bg-white px-3 py-1 text-sm text-gray-700 hover:bg-gray-100 disabled:opacity-40'
+            className='flex items-center justify-center rounded-lg border border-gray-300 bg-white px-3.5 py-2 text-sm font-medium text-gray-700 transition-colors hover:bg-gray-100 disabled:cursor-not-allowed disabled:opacity-40'
           >
             Назад
           </button>
-          <span className='text-sm font-medium text-gray-700'>
+          <span className='px-3 py-2 text-sm font-medium text-gray-700'>
             {actualCurrentPage} / {totalPages || 1}
           </span>
           <button
             onClick={() => handlePageChange(actualCurrentPage + 1)}
             disabled={actualCurrentPage === totalPages || totalPages === 0}
-            className='rounded-md border border-gray-300 bg-white px-3 py-1 text-sm text-gray-700 hover:bg-gray-100 disabled:opacity-40'
+            className='flex items-center justify-center rounded-lg border border-gray-300 bg-white px-3.5 py-2 text-sm font-medium text-gray-700 transition-colors hover:bg-gray-100 disabled:cursor-not-allowed disabled:opacity-40'
           >
             Вперед
           </button>

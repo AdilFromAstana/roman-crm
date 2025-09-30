@@ -164,6 +164,17 @@ export interface BringCarImage {
   updatedAt: string;
 }
 
+export interface BringCarStatus {
+  id: string;
+  code: string;
+  name: string;
+  description: string;
+  order: number;
+  isActive: boolean;
+  createdAt: string;
+  updatedAt: string;
+}
+
 // Сотрудник
 export interface Employee {
   id: string;
@@ -199,6 +210,7 @@ export interface BringCar {
   bringEmployeeId: string;
   bringEmployee: Employee;
   bringCarStatusCode: string;
+  bringCarStatus: BringCarStatus;
   createdAt: string;
   isActive: boolean;
   createdDatabaseAt: string;
