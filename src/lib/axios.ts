@@ -3,7 +3,7 @@ import axios from 'axios';
 
 const api = axios.create({
   baseURL:
-    process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3001',
+    process.env.NEXT_PUBLIC_API_URL || 'https://afadd2b4e5b2.ngrok-free.app',
   timeout: 10000
 });
 
